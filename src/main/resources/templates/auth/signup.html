@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>학생 회원가입 - 과제 관리</title>
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900"
+          rel="stylesheet">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+</head>
+<body class="bg-gradient-primary">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-8 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">학생 회원가입</h1>
+                    </div>
+
+                    <form class="user" th:action="@{/signup}" method="post">
+                        <div class="form-group">
+                            <input type="text" name="studentNo" class="form-control form-control-user"
+                                   placeholder="학번" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control form-control-user"
+                                   placeholder="이름" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control form-control-user"
+                                   placeholder="이메일" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control form-control-user"
+                                   placeholder="비밀번호" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-user btn-block">가입하기</button>
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                        <a class="small" th:href="@{/login}">이미 계정이 있나요? 로그인</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+</body>
+</html>

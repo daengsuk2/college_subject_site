@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: vibe-midterm
+  datasource:
+    # PostgreSQL 연결 정보 (DB 준비 후 환경변수 또는 값 수정)
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/midterm}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false

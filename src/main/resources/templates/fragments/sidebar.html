@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<!-- 역할별 사이드바 (U3): 강사 / 학생 메뉴 분리 -->
+<ul th:fragment="sidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+    id="accordionSidebar">
+
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-book-reader"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">과제 관리</div>
+    </a>
+
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>대시보드</span></a>
+    </li>
+
+    <!-- 강사 메뉴 -->
+    <th:block sec:authorize="hasRole('INSTRUCTOR')">
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">강사</div>
+
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/instructor/courses}">
+                <i class="fas fa-fw fa-chalkboard-teacher"></i>
+                <span>강좌 관리</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/instructor/assignments/new}">
+                <i class="fas fa-fw fa-edit"></i>
+                <span>과제 등록</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/instructor/stats}">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>통계 대시보드</span></a>
+        </li>
+    </th:block>
+
+    <!-- 학생 메뉴 -->
+    <th:block sec:authorize="hasRole('STUDENT')">
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">학생</div>
+
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/student/courses/join}">
+                <i class="fas fa-fw fa-key"></i>
+                <span>수강 등록</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/student/assignments}">
+                <i class="fas fa-fw fa-tasks"></i>
+                <span>내 과제</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/student/submissions}">
+                <i class="fas fa-fw fa-clipboard-check"></i>
+                <span>내 제출 · 점수</span></a>
+        </li>
+    </th:block>
+
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+</ul>
+</body>
+</html>

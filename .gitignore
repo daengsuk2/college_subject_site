@@ -1,0 +1,14 @@
+HELP.md
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+
+### 업로드 파일 / 비밀정보 ###
+uploads/
+application-local.yml
+.env
