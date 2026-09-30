@@ -152,7 +152,3 @@ assignment 1:N submission, users(학생) 1:N submission.
 - **W2 강좌 · 과제 등록**: 예정
 - **W3 제출 · 채점**: 예정
 - **W4 통계 + 마무리**: 예정
-
-## AI 도구 사용
-
-Claude Code를 사용해 개발합니다. 구현 단위별로 위의 기능 ID(U/I/S)를 커밋 메시지에 남깁니다.
