@@ -19,22 +19,30 @@
                         <h1 class="h4 text-gray-900 mb-4">학생 회원가입</h1>
                     </div>
 
-                    <form class="user" th:action="@{/signup}" method="post">
+                    <form class="user" th:action="@{/signup}" th:object="${signupRequest}" method="post" novalidate>
                         <div class="form-group">
-                            <input type="text" name="studentNo" class="form-control form-control-user"
-                                   placeholder="학번" required>
+                            <input type="text" th:field="*{studentNo}" class="form-control form-control-user"
+                                   th:classappend="${#fields.hasErrors('studentNo')} ? 'is-invalid'"
+                                   placeholder="학번">
+                            <div class="invalid-feedback pl-3" th:errors="*{studentNo}"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="name" class="form-control form-control-user"
-                                   placeholder="이름" required>
+                            <input type="text" th:field="*{name}" class="form-control form-control-user"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                   placeholder="이름">
+                            <div class="invalid-feedback pl-3" th:errors="*{name}"></div>
                         </div>
                         <div class="form-group">
-                            <input type="email" name="email" class="form-control form-control-user"
-                                   placeholder="이메일" required>
+                            <input type="email" th:field="*{email}" class="form-control form-control-user"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                                   placeholder="이메일">
+                            <div class="invalid-feedback pl-3" th:errors="*{email}"></div>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="password" class="form-control form-control-user"
-                                   placeholder="비밀번호" required>
+                            <input type="password" th:field="*{password}" class="form-control form-control-user"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                                   placeholder="비밀번호 (8자 이상)">
+                            <div class="invalid-feedback pl-3" th:errors="*{password}"></div>
                         </div>
                         <button type="submit" class="btn btn-primary btn-user btn-block">가입하기</button>
                     </form>
