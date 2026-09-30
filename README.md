@@ -66,6 +66,8 @@ docker exec midterm-db psql -U postgres -c "CREATE DATABASE midterm_test"
 - [요구사항 명세](docs/requirements.md)
 - [ERD](docs/erd.md)
 - [화면 설계](docs/screens.md)
+- [주간 진행 보고](docs/progress_w1.md)
+- [아이디어 · 추가 예정](docs/ideas.md)
 
 ## 프로젝트 구조
 
