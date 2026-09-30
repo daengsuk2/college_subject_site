@@ -47,8 +47,13 @@ Windows에서는 `gradlew.bat bootRun`. 실행 후 http://localhost:8080 에 접
 ```
 src/main/java/kr/ac/ync/midterm/
 ├─ MidtermApplication.java
-├─ config/SecurityConfig.java        # 폼 로그인, 접근 규칙, BCrypt
-└─ controller/PageController.java    # 화면 이동 (/, /login, /signup)
+├─ common/
+│  └─ config/SecurityConfig.java     # 폼 로그인, 접근 규칙, BCrypt
+├─ user/                             # User, Role, UserRepository, AuthController (/login, /signup)
+├─ course/                           # Course, Enrollment (+ Repository)
+├─ assignment/                       # Assignment (+ Repository)
+├─ submission/                       # Submission, SubmissionStatus (+ Repository)
+└─ home/HomeController.java          # 대시보드 (/)
 
 src/main/resources/
 ├─ application.yml

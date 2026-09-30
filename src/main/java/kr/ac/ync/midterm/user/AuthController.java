@@ -1,15 +1,10 @@
-package kr.ac.ync.midterm.controller;
+package kr.ac.ync.midterm.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class PageController {
-
-	@GetMapping("/")
-	public String home() {
-		return "home";
-	}
+public class AuthController {
 
 	@GetMapping("/login")
 	public String login() {

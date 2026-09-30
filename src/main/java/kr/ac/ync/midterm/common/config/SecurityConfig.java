@@ -1,4 +1,4 @@
-package kr.ac.ync.midterm.config;
+package kr.ac.ync.midterm.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
