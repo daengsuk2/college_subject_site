@@ -1,11 +1,8 @@
 spring:
   application:
     name: vibe-midterm
-  config:
-    # 프로젝트 루트의 .env 파일을 읽어 아래 ${...} 값에 사용한다 (없으면 무시, 환경변수가 우선)
-    import: optional:file:.env[.properties]
   datasource:
-    # PostgreSQL 연결 정보 (.env 또는 환경변수)
+    # PostgreSQL 연결 정보 (.env 또는 환경변수). .env는 DotenvEnvironmentPostProcessor가 UTF-8로 읽는다.
     url: ${DB_URL:jdbc:postgresql://localhost:5432/midterm}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:}
