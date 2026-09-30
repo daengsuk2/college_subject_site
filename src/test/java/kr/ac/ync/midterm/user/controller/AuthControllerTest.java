@@ -1,7 +1,10 @@
 package kr.ac.ync.midterm.user.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -12,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.RequestBuilder;
 
 import kr.ac.ync.midterm.support.BaseController;
 import kr.ac.ync.midterm.user.domain.Role;
@@ -29,6 +33,61 @@ class AuthControllerTest extends BaseController {
 		mockMvc.perform(get("/login"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("auth/login"));
+	}
+
+	private RequestBuilder loginRequest(String email, String password) {
+		return formLogin("/login").userParameter("email").user(email).password(password);
+	}
+
+	@Test
+	@DisplayName("POST /login - 1.정상 로그인은 / 로 이동하고 인증됨")
+	void login_success() throws Exception {
+		mockMvc.perform(loginRequest("student@test.com", "password123"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withUsername("student@test.com").withRoles("STUDENT"));
+	}
+
+	@Test
+	@DisplayName("POST /login - 2.강사 계정은 INSTRUCTOR 권한으로 인증됨")
+	void login_instructor() throws Exception {
+		createUser("teacher@test.com", Role.INSTRUCTOR);
+
+		mockMvc.perform(loginRequest("teacher@test.com", "password123"))
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated().withRoles("INSTRUCTOR"));
+	}
+
+	@Test
+	@DisplayName("POST /login - 3.대소문자·공백이 다른 이메일로도 로그인됨")
+	void login_emailNormalized() throws Exception {
+		mockMvc.perform(loginRequest("  Student@Test.com ", "password123"))
+				.andExpect(redirectedUrl("/"))
+				.andExpect(authenticated());
+	}
+
+	@Test
+	@DisplayName("POST /login - 4.비밀번호가 틀리면 /login?error")
+	void login_wrongPassword() throws Exception {
+		mockMvc.perform(loginRequest("student@test.com", "wrongPassword"))
+				.andExpect(redirectedUrl("/login?error"))
+				.andExpect(unauthenticated());
+	}
+
+	@Test
+	@DisplayName("POST /login - 5.없는 이메일도 같은 /login?error (계정 존재 여부를 알 수 없음)")
+	void login_unknownEmail() throws Exception {
+		mockMvc.perform(loginRequest("noSuchEmail@test.com", "password123"))
+				.andExpect(redirectedUrl("/login?error"))
+				.andExpect(unauthenticated());
+	}
+
+	@Test
+	@DisplayName("POST /logout - 로그아웃하면 /login?logout")
+	void logout() throws Exception {
+		mockMvc.perform(post("/logout").with(csrf()))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/login?logout"));
 	}
 
 	@Test

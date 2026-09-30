@@ -22,22 +22,27 @@
 - Docker (PostgreSQL 실행용)
 
 ### 2. DB 실행 (Docker)
-`.env.example`을 복사해 `.env`를 만들고 `DB_PASSWORD`를 채웁니다. (`.env`는 git에 올라가지 않습니다.)
+`.env.example`을 복사해 `.env`를 만들고 값을 채웁니다. (`.env`는 git에 올라가지 않습니다.)
 ```bash
 cp .env.example .env
 docker compose up -d
 ```
 컨테이너 이름은 `midterm-db`, 데이터베이스 `midterm`이 자동으로 만들어집니다.
 
-### 3. DB 접속 정보
-`src/main/resources/application.yml`은 아래 환경변수를 읽습니다. 값이 없으면 기본값을 씁니다.
-Spring Boot는 `.env`를 자동으로 읽지 않으므로 실행 전에 같은 값을 환경변수로 지정해야 합니다.
+### 3. `.env` 설정
+앱은 프로젝트 루트의 `.env`를 직접 읽습니다 (`spring.config.import`). 같은 이름의 환경변수가 있으면 환경변수가 우선합니다.
 
-| 환경변수 | 기본값 |
-|----------|--------|
-| `DB_URL` | `jdbc:postgresql://localhost:5432/midterm` |
-| `DB_USERNAME` | `postgres` |
-| `DB_PASSWORD` | (빈 값) |
+| 항목 | 설명 | 기본값 |
+|------|------|--------|
+| `DB_USERNAME` | DB 계정 (Docker 컨테이너 생성에도 사용) | `postgres` |
+| `DB_PASSWORD` | DB 비밀번호 (Docker 컨테이너 생성에도 사용) | (빈 값) |
+| `DB_URL` | DB 주소. 보통 바꿀 필요 없음 | `jdbc:postgresql://localhost:5432/midterm` |
+| `INSTRUCTOR_EMAIL` | 강사 초기 계정 이메일 | (빈 값) |
+| `INSTRUCTOR_NAME` | 강사 초기 계정 이름 (화면 상단에 표시) | `강사` |
+| `INSTRUCTOR_PASSWORD` | 강사 초기 계정 비밀번호. 비어 있으면 계정을 만들지 않음 | (빈 값) |
+
+`DB_PASSWORD`는 DB가 **처음 만들어질 때만** 적용되고, `INSTRUCTOR_*`도 강사 계정이 **처음 생성될 때만** 적용됩니다.
+값을 바꾸려면 볼륨(`docker compose down -v`)이나 해당 계정을 지우고 다시 만들어야 합니다.
 
 ### 4. 실행
 ```bash
@@ -53,7 +58,8 @@ docker exec midterm-db psql -U postgres -c "CREATE DATABASE midterm_test"
 ```bash
 ./gradlew test
 ```
-테스트도 `DB_USERNAME`, `DB_PASSWORD` 환경변수가 필요하며, 테스트가 끝나면 테이블은 자동으로 삭제됩니다.
+테스트도 `.env`의 `DB_USERNAME`, `DB_PASSWORD`를 사용하며, 테스트가 끝나면 테이블은 자동으로 삭제됩니다.
+테스트에서는 강사 초기 계정을 자동 생성하지 않습니다.
 
 ## 설계 문서
 
@@ -107,9 +113,9 @@ src/main/resources/
 | ID | 기능 | 상태 |
 |----|------|------|
 | U1 | 학생 회원가입 (학번 · 이름 · 이메일 · 비밀번호) | 완료 (테스트 통과, 로그인 연동은 U2) |
-| U2 | 로그인 · 로그아웃 (Spring Security 폼 로그인) | 화면 · 보안 설정 완료, DB 연동 예정 |
-| U3 | 역할별 메뉴 (강사 / 학생 사이드바 분리) | 사이드바 코드만 작성, 미검증 (URL 접근 제한 예정) |
-| U4 | 강사 계정 (초기 데이터로 생성, 가입 불가) | 예정 |
+| U2 | 로그인 · 로그아웃 (Spring Security 폼 로그인) | 완료 (DB 사용자 로그인, 테스트 통과) |
+| U3 | 역할별 메뉴 (강사 / 학생 사이드바 분리) | 사이드바 분기 확인 완료, `/instructor/**` · `/student/**` URL 접근 제한(403)은 예정 |
+| U4 | 강사 계정 (초기 데이터로 생성, 가입 불가) | 완료 (`.env`의 `INSTRUCTOR_*`로 생성) |
 
 ### 강사
 | ID | 기능 | 상태 |
@@ -179,11 +185,14 @@ assignment 1:N submission, users(학생) 1:N submission.
 
 ## 초기 계정
 
-강사 계정은 가입할 수 없고 초기 데이터로 생성합니다. (구현 후 계정 정보를 여기에 기록)
+강사 계정은 가입할 수 없고, 앱 시작 시 `.env`의 `INSTRUCTOR_EMAIL` · `INSTRUCTOR_NAME` · `INSTRUCTOR_PASSWORD`로 만들어집니다.
+(비밀번호가 비어 있으면 만들지 않고, 이미 있으면 건너뜁니다.) 비밀번호는 저장소에 기록하지 않으니 시연 환경의 `.env`를 확인하세요.
+
+학생 계정은 `/signup`에서 가입합니다.
 
 ## 진행 현황 (4주 로드맵)
 
-- **W1 설계 + 기반**: SB Admin 2 레이아웃 적용, 로그인/회원가입 화면, 보안 설정 완료. 엔티티와 회원가입 · 로그인 로직 진행 예정
+- **W1 설계 + 기반**: 설계 문서, 엔티티 5개, SB Admin 2 레이아웃, U1 회원가입, U2 로그인, U4 강사 초기 계정 완료. U3는 URL 접근 제한(403)이 남음
 - **W2 강좌 · 과제 등록**: 예정
 - **W3 제출 · 채점**: 예정
 - **W4 통계 + 마무리**: 예정
