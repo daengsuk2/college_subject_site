@@ -22,13 +22,12 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	/**
-	 * 학생 회원가입 (U1). 이메일은 공백 제거 후 소문자로 저장한다.
-	 * 로그인(U2)에서도 같은 방식으로 정규화해야 한다.
+	 * 학생 회원가입 (U1). 이메일은 {@link User#normalizeEmail}로 정규화해 저장한다.
 	 */
 	@Override
 	@Transactional
 	public UserResponse signup(SignupRequest request) {
-		String email = request.getEmail().trim().toLowerCase();
+		String email = User.normalizeEmail(request.getEmail());
 
 		if (userRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();

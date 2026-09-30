@@ -61,7 +61,7 @@ class UserServiceImplTest {
 		// when
 		userService.signup(request);
 		// then
-		User saved = userRepository.findAll().getFirst();
+		User saved = userRepository.findByEmail("hong@test.com").orElseThrow();
 		assertThat(saved.getPassword()).isNotEqualTo("password123");
 		assertThat(passwordEncoder.matches("password123", saved.getPassword())).isTrue();
 	}
