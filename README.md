@@ -7,7 +7,7 @@
 
 | 구분 | 내용 |
 |------|------|
-| 백엔드 | Spring Boot 3.5.6, Java 17, Spring Data JPA |
+| 백엔드 | Spring Boot 3.5.6, Java 21, Spring Data JPA |
 | DB | PostgreSQL |
 | 인증 | Spring Security 6 (세션 기반 폼 로그인, BCrypt) |
 | 화면 | Thymeleaf + Layout Dialect + thymeleaf-extras-springsecurity6 (서버 렌더링) |
@@ -18,11 +18,20 @@
 ## 실행 방법
 
 ### 1. 준비물
-- JDK 17 이상
-- PostgreSQL (데이터베이스 `midterm` 생성)
+- JDK 21 (Gradle 툴체인이 21로 빌드하므로 없으면 설치 필요)
+- Docker (PostgreSQL 실행용)
 
-### 2. DB 접속 정보
+### 2. DB 실행 (Docker)
+`.env.example`을 복사해 `.env`를 만들고 `DB_PASSWORD`를 채웁니다. (`.env`는 git에 올라가지 않습니다.)
+```bash
+cp .env.example .env
+docker compose up -d
+```
+컨테이너 이름은 `midterm-db`, 데이터베이스 `midterm`이 자동으로 만들어집니다.
+
+### 3. DB 접속 정보
 `src/main/resources/application.yml`은 아래 환경변수를 읽습니다. 값이 없으면 기본값을 씁니다.
+Spring Boot는 `.env`를 자동으로 읽지 않으므로 실행 전에 같은 값을 환경변수로 지정해야 합니다.
 
 | 환경변수 | 기본값 |
 |----------|--------|
@@ -30,11 +39,21 @@
 | `DB_USERNAME` | `postgres` |
 | `DB_PASSWORD` | (빈 값) |
 
-### 3. 실행
+### 4. 실행
 ```bash
 ./gradlew bootRun
 ```
 Windows에서는 `gradlew.bat bootRun`. 실행 후 http://localhost:8080 에 접속합니다.
+
+### 5. 테스트
+테스트는 개발 DB와 분리된 `midterm_test` DB를 사용합니다. 처음 한 번만 만들어 줍니다.
+```bash
+docker exec midterm-db psql -U postgres -c "CREATE DATABASE midterm_test"
+```
+```bash
+./gradlew test
+```
+테스트도 `DB_USERNAME`, `DB_PASSWORD` 환경변수가 필요하며, 테스트가 끝나면 테이블은 자동으로 삭제됩니다.
 
 ## 설계 문서
 
@@ -47,13 +66,24 @@ Windows에서는 `gradlew.bat bootRun`. 실행 후 http://localhost:8080 에 접
 ```
 src/main/java/kr/ac/ync/midterm/
 ├─ MidtermApplication.java
-├─ common/
-│  └─ config/SecurityConfig.java     # 폼 로그인, 접근 규칙, BCrypt
-├─ user/                             # User, Role, UserRepository, AuthController (/login, /signup)
-├─ course/                           # Course, Enrollment (+ Repository)
-├─ assignment/                       # Assignment (+ Repository)
-├─ submission/                       # Submission, SubmissionStatus (+ Repository)
-└─ home/HomeController.java          # 대시보드 (/)
+├─ global/                           # 공통
+│  ├─ config/SecurityConfig.java     # 폼 로그인, 접근 규칙, BCrypt
+│  └─ exception/                     # CustomException, ForbiddenException, GlobalExceptionHandler
+├─ user/                             # 기능별 패키지 (아래 하위 패키지 구성은 모두 동일)
+│  ├─ controller/  AuthController (/login, /signup)
+│  ├─ domain/      User, Role
+│  ├─ dto/request, dto/response
+│  ├─ exception/   DuplicateEmailException
+│  ├─ repository/  UserRepository
+│  └─ service/     UserService, UserServiceImpl
+├─ course/         domain, repository   (Course, Enrollment)
+├─ assignment/     domain, repository   (Assignment)
+├─ submission/     domain, repository   (Submission, SubmissionStatus)
+└─ home/controller/HomeController.java  # 대시보드 (/)
+
+src/test/java/kr/ac/ync/midterm/       # main과 같은 패키지 구조로 테스트 작성
+├─ support/BaseController.java         # MockMvc + Security 공통 설정
+└─ user/  repository, service, controller 테스트
 
 src/main/resources/
 ├─ application.yml
@@ -62,7 +92,7 @@ src/main/resources/
    ├─ layout/layout.html             # 공통 레이아웃
    ├─ fragments/                     # sidebar(역할별), topbar, footer
    ├─ auth/                          # login, signup
-   ├─ error/                         # 403, 404
+   ├─ error/                         # 403, 404, 공통 오류
    └─ home.html
 ```
 
@@ -76,7 +106,7 @@ src/main/resources/
 ### 공통
 | ID | 기능 | 상태 |
 |----|------|------|
-| U1 | 학생 회원가입 (학번 · 이름 · 이메일 · 비밀번호) | 화면만 완료 |
+| U1 | 학생 회원가입 (학번 · 이름 · 이메일 · 비밀번호) | 완료 (테스트 통과, 로그인 연동은 U2) |
 | U2 | 로그인 · 로그아웃 (Spring Security 폼 로그인) | 화면 · 보안 설정 완료, DB 연동 예정 |
 | U3 | 역할별 메뉴 (강사 / 학생 사이드바 분리) | 사이드바 코드만 작성, 미검증 (URL 접근 제한 예정) |
 | U4 | 강사 계정 (초기 데이터로 생성, 가입 불가) | 예정 |
