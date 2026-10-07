@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>강좌 관리</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">강좌 관리</h1>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <!-- 강좌 개설 (I1) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">강좌 개설</h6>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/instructor/courses}" th:object="${courseCreateRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <input type="text" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                           placeholder="강좌명">
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">개설</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 내 강좌 목록 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">내 강좌</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>강좌명</th>
+                        <th>참여코드</th>
+                        <th>개설일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td th:text="${course.name}"></td>
+                        <td><code th:text="${course.joinCode}"></code></td>
+                        <td th:text="${#temporals.format(course.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(courses)}">
+                        <td colspan="3" class="text-center text-gray-600">개설한 강좌가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
