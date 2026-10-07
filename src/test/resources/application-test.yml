@@ -10,3 +10,6 @@ spring:
 app:
   instructor:
     password: ""
+  upload:
+    # 테스트 업로드 파일은 build 폴더에 저장한다 (실제 uploads/ 폴더와 섞이지 않는다)
+    dir: build/test-uploads
