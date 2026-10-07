@@ -9,6 +9,9 @@
 <div layout:fragment="content">
     <h1 class="h3 mb-4 text-gray-800" th:text="${course.name}">강좌명</h1>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
     <!-- 강좌 정보 -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -23,6 +26,49 @@
                 <dt class="col-sm-3">수강생 수</dt>
                 <dd class="col-sm-9" th:text="${#lists.size(course.students)} + '명'"></dd>
             </dl>
+        </div>
+    </div>
+
+    <!-- 과제 목록 (I3) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">과제</h6>
+            <a th:href="@{/instructor/assignments/new(courseId=${course.id})}" class="btn btn-primary btn-sm">과제 등록</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>시작일시</th>
+                        <th>종료일시</th>
+                        <th>배점</th>
+                        <th style="width: 140px;">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="assignment : ${assignments}">
+                        <td th:text="${assignment.title}"></td>
+                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${assignment.maxScore}"></td>
+                        <td>
+                            <a th:href="@{/instructor/assignments/{id}/edit(id=${assignment.id})}"
+                               class="btn btn-secondary btn-sm">수정</a>
+                            <form th:action="@{/instructor/assignments/{id}/delete(id=${assignment.id})}"
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('이 과제를 삭제하시겠습니까?');">
+                                <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(assignments)}">
+                        <td colspan="5" class="text-center text-gray-600">등록된 과제가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

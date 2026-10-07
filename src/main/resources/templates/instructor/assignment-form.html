@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>과제 등록 · 수정</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800" th:text="${editing} ? '과제 수정' : '과제 등록'">과제 등록</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary" th:text="${course.name}">강좌명</h6>
+        </div>
+        <div class="card-body">
+            <form th:action="${formAction}" th:object="${assignmentRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" th:field="*{title}" class="form-control"
+                           th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{title}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" th:field="*{content}" rows="5" class="form-control"
+                              th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{content}"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="startAt">시작일시</label>
+                        <input type="datetime-local" id="startAt" th:field="*{startAt}" class="form-control"
+                               th:classappend="${#fields.hasErrors('startAt')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{startAt}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="endAt">종료일시</label>
+                        <input type="datetime-local" id="endAt" th:field="*{endAt}" class="form-control"
+                               th:classappend="${#fields.hasErrors('endAt')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{endAt}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="maxScore">배점</label>
+                        <input type="number" id="maxScore" th:field="*{maxScore}" class="form-control" min="1"
+                               th:classappend="${#fields.hasErrors('maxScore')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{maxScore}"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" th:text="${editing} ? '수정' : '등록'">등록</button>
+                <a th:href="@{/instructor/courses/{id}(id=${course.id})}" class="btn btn-secondary">취소</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
