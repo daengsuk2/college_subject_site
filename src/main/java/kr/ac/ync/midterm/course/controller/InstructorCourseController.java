@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -47,5 +48,15 @@ public class InstructorCourseController {
 		redirectAttributes.addFlashAttribute("message",
 				"강좌가 개설되었습니다. 참여코드: " + created.joinCode());
 		return "redirect:/instructor/courses";
+	}
+
+	/**
+	 * 강좌 상세 + 수강생 목록 (I2). 없는 강좌 404, 다른 강사의 강좌 403은 서비스에서 처리한다.
+	 */
+	@GetMapping("/{id}")
+	public String detail(@AuthenticationPrincipal CustomUserDetails user,
+			@PathVariable Long id, Model model) {
+		model.addAttribute("course", courseService.findMyCourseDetail(user.getId(), id));
+		return "instructor/course-detail";
 	}
 }

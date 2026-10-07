@@ -7,8 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.ac.ync.midterm.course.domain.Course;
 import kr.ac.ync.midterm.course.dto.request.CourseCreateRequest;
+import kr.ac.ync.midterm.course.dto.response.CourseDetailResponse;
 import kr.ac.ync.midterm.course.dto.response.CourseResponse;
+import kr.ac.ync.midterm.course.dto.response.EnrolledStudentResponse;
+import kr.ac.ync.midterm.course.exception.CourseNotFoundException;
 import kr.ac.ync.midterm.course.repository.CourseRepository;
+import kr.ac.ync.midterm.course.repository.EnrollmentRepository;
+import kr.ac.ync.midterm.global.exception.ForbiddenException;
 import kr.ac.ync.midterm.user.domain.User;
 import kr.ac.ync.midterm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +26,7 @@ public class CourseServiceImpl implements CourseService {
 	private static final int MAX_ATTEMPTS = 10;
 
 	private final CourseRepository courseRepository;
+	private final EnrollmentRepository enrollmentRepository;
 	private final UserRepository userRepository;
 	private final JoinCodeGenerator joinCodeGenerator;
 
@@ -49,6 +55,26 @@ public class CourseServiceImpl implements CourseService {
 		return courseRepository.findByInstructorIdOrderByCreatedAtDesc(instructorId).stream()
 				.map(CourseResponse::from)
 				.toList();
+	}
+
+	/**
+	 * 강좌 상세 + 수강생 목록 (I2). 없는 강좌는 404, 다른 강사의 강좌는 403 (B5).
+	 */
+	@Override
+	public CourseDetailResponse findMyCourseDetail(Long instructorId, Long courseId) {
+		Course course = courseRepository.findById(courseId)
+				.orElseThrow(CourseNotFoundException::new);
+
+		if (!course.getInstructor().getId().equals(instructorId)) {
+			throw new ForbiddenException();
+		}
+
+		List<EnrolledStudentResponse> students = enrollmentRepository.findByCourseIdOrderByJoinedAtAsc(courseId)
+				.stream()
+				.map(EnrolledStudentResponse::from)
+				.toList();
+
+		return CourseDetailResponse.of(course, students);
 	}
 
 	// 중복되지 않는 참여코드를 발급한다. (최종 안전장치는 DB의 join_code UNIQUE 제약)

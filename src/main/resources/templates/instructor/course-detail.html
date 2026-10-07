@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>강좌 상세</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800" th:text="${course.name}">강좌명</h1>
+
+    <!-- 강좌 정보 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">강좌 정보</h6>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">참여코드</dt>
+                <dd class="col-sm-9"><code th:text="${course.joinCode}"></code></dd>
+                <dt class="col-sm-3">개설일</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(course.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+                <dt class="col-sm-3">수강생 수</dt>
+                <dd class="col-sm-9" th:text="${#lists.size(course.students)} + '명'"></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- 수강생 목록 (I2) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">수강생 목록</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>학번</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>등록일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="student : ${course.students}">
+                        <td th:text="${student.studentNo}"></td>
+                        <td th:text="${student.name}"></td>
+                        <td th:text="${student.email}"></td>
+                        <td th:text="${#temporals.format(student.joinedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(course.students)}">
+                        <td colspan="4" class="text-center text-gray-600">등록된 수강생이 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/instructor/courses}" class="btn btn-secondary">&larr; 강좌 목록</a>
+</div>
+</body>
+</html>
