@@ -46,7 +46,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="course : ${courses}">
-                        <td th:text="${course.name}"></td>
+                        <td><a th:href="@{/instructor/courses/{id}(id=${course.id})}" th:text="${course.name}"></a></td>
                         <td><code th:text="${course.joinCode}"></code></td>
                         <td th:text="${#temporals.format(course.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                     </tr>
