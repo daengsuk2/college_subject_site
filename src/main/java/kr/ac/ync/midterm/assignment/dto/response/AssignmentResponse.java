@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import kr.ac.ync.midterm.assignment.domain.Assignment;
 
 public record AssignmentResponse(Long id, Long courseId, String title, String content,
-		LocalDateTime startAt, LocalDateTime endAt, int maxScore, LocalDateTime createdAt) {
+		LocalDateTime startAt, LocalDateTime endAt, int maxScore, LocalDateTime createdAt,
+		String originalFilename) {
 
 	public static AssignmentResponse from(Assignment assignment) {
 		return new AssignmentResponse(
@@ -16,6 +17,11 @@ public record AssignmentResponse(Long id, Long courseId, String title, String co
 				assignment.getStartAt(),
 				assignment.getEndAt(),
 				assignment.getMaxScore(),
-				assignment.getCreatedAt());
+				assignment.getCreatedAt(),
+				assignment.hasFile() ? assignment.getOriginalFilename() : null);
+	}
+
+	public boolean hasFile() {
+		return originalFilename != null;
 	}
 }

@@ -86,12 +86,20 @@ erDiagram
 | B7 | `assignment.end_at > start_at` |
 | B8 | `submission`에 해당 assignment_id 행이 있는지 |
 
+## 추가한 컬럼
+
+제공된 ERD에 없지만 구현하면서 추가한 컬럼입니다. 이유는 README의 "추가한 컬럼과 이유"에도 기록합니다.
+
+| 컬럼 | 이유 | 추가한 기능 |
+|------|------|-------------|
+| assignment.original_filename (nullable) | 저장명(`file_path`)은 UUID이므로 다운로드 시 원래 파일명을 보여 주기 위해 | I3-b (확정) |
+
 ## 추가 컬럼 후보
 
 아래는 제공된 ERD에 없는 후보이며 **아직 확정하지 않았습니다.** 확정하면 이유를 적고 README에 반영합니다.
 
 | 후보 | 이유 | 필요성 |
 |------|------|--------|
-| assignment.original_filename, submission.original_filename | 저장명은 UUID이므로 다운로드 시 원래 파일명을 보여 주기 위해 | 파일 첨부를 구현하면 필요 |
+| submission.original_filename | 학생이 제출한 파일의 원래 파일명을 보여 주기 위해 | 제출 파일 첨부(S3)를 구현하면 필요 |
 | users.created_at | 가입일 기록 | 낮음 |
 | course.description | 강좌 설명 표시 | 낮음 |

@@ -27,6 +27,12 @@
                 <dd class="col-sm-9" th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></dd>
                 <dt class="col-sm-3">배점</dt>
                 <dd class="col-sm-9" th:text="${assignment.maxScore} + '점'"></dd>
+                <dt class="col-sm-3">첨부파일</dt>
+                <dd class="col-sm-9">
+                    <a th:if="${assignment.hasFile()}" th:href="@{/assignments/{id}/file(id=${assignment.id})}"
+                       th:text="${assignment.originalFilename}"></a>
+                    <span th:unless="${assignment.hasFile()}" class="text-gray-600">없음</span>
+                </dd>
             </dl>
         </div>
     </div>

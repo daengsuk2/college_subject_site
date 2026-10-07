@@ -14,7 +14,8 @@
             <h6 class="m-0 font-weight-bold text-primary" th:text="${course.name}">강좌명</h6>
         </div>
         <div class="card-body">
-            <form th:action="${formAction}" th:object="${assignmentRequest}" method="post" novalidate>
+            <form th:action="${formAction}" th:object="${assignmentRequest}" method="post"
+                  enctype="multipart/form-data" novalidate>
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" id="title" th:field="*{title}" class="form-control"
@@ -50,11 +51,38 @@
                     </div>
                 </div>
 
+                <!-- 첨부파일 (I3-b): 선택, 최대 10MB, 허용 형식만 -->
+                <div class="form-group">
+                    <label for="file">첨부파일 (선택, 최대 10MB)</label>
+                    <p class="small text-gray-600 mb-1" th:if="${editing and currentFileName != null}">
+                        현재 첨부: <a th:href="@{/assignments/{id}/file(id=${assignmentId})}"
+                                  th:text="${currentFileName}"></a>
+                        (새 파일을 선택하면 교체되고, 선택하지 않으면 유지됩니다)
+                    </p>
+                    <input type="file" id="file" name="file" class="form-control-file"
+                           accept=".pdf,.doc,.docx,.hwp,.hwpx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.png,.jpg,.jpeg">
+                    <div class="invalid-feedback d-block" th:errors="*{file}"></div>
+                </div>
+
                 <button type="submit" class="btn btn-primary" th:text="${editing} ? '수정' : '등록'">등록</button>
                 <a th:href="@{/instructor/courses/{id}(id=${course.id})}" class="btn btn-secondary">취소</a>
             </form>
         </div>
     </div>
 </div>
+
+<!-- 파일을 고르는 순간 10MB 초과를 알려 준다 (편의 기능이며, 서버에서도 다시 검증한다) -->
+<th:block layout:fragment="script">
+    <script>
+        document.getElementById('file').addEventListener('change', function () {
+            var maxBytes = 10 * 1024 * 1024;
+            if (this.files.length > 0 && this.files[0].size > maxBytes) {
+                alert('파일 크기는 10MB 이하여야 합니다. (선택한 파일: '
+                    + (this.files[0].size / 1024 / 1024).toFixed(1) + 'MB)');
+                this.value = '';
+            }
+        });
+    </script>
+</th:block>
 </body>
 </html>

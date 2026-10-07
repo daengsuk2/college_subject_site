@@ -15,9 +15,23 @@ spring:
         format_sql: true
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      # 업로드 최대 크기 10MB (서버에서도 FileStorage가 한 번 더 검증한다)
+      max-file-size: 10MB
+      max-request-size: 11MB
+
+server:
+  tomcat:
+    # 업로드 한도(10MB)를 넘은 요청을 거절할 때, 남은 본문을 이 크기까지 읽어서 버린다.
+    # 기본값(2MB)을 넘으면 Tomcat이 연결을 끊어 브라우저가 413 안내 화면을 받지 못하고 멈춘 것처럼 보인다.
+    max-swallow-size: 100MB
 
 # 강사 초기 계정 (U4). 비밀번호가 비어 있으면 계정을 만들지 않는다.
 app:
+  upload:
+    # 첨부파일 저장 폴더. UUID 이름으로 저장하며 git에는 올라가지 않는다 (.gitignore의 uploads/)
+    dir: ${UPLOAD_DIR:uploads}
   instructor:
     email: ${INSTRUCTOR_EMAIL:}
     name: ${INSTRUCTOR_NAME:강사}
