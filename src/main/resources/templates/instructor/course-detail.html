@@ -44,6 +44,7 @@
                         <th>시작일시</th>
                         <th>종료일시</th>
                         <th>배점</th>
+                        <th>첨부</th>
                         <th style="width: 140px;">관리</th>
                     </tr>
                     </thead>
@@ -53,6 +54,11 @@
                         <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${assignment.maxScore}"></td>
+                        <td>
+                            <a th:if="${assignment.hasFile()}" th:href="@{/assignments/{id}/file(id=${assignment.id})}"
+                               th:text="${assignment.originalFilename}"></a>
+                            <span th:unless="${assignment.hasFile()}" class="text-gray-600">-</span>
+                        </td>
                         <td>
                             <a th:href="@{/instructor/assignments/{id}/edit(id=${assignment.id})}"
                                class="btn btn-secondary btn-sm">수정</a>
@@ -64,7 +70,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(assignments)}">
-                        <td colspan="5" class="text-center text-gray-600">등록된 과제가 없습니다.</td>
+                        <td colspan="6" class="text-center text-gray-600">등록된 과제가 없습니다.</td>
                     </tr>
                     </tbody>
                 </table>

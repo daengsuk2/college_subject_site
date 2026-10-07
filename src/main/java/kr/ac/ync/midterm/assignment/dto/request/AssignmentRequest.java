@@ -3,6 +3,7 @@ package kr.ac.ync.midterm.assignment.dto.request;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,9 @@ public class AssignmentRequest {
 	@NotNull(message = "배점을 입력해 주세요.")
 	@Min(value = 1, message = "배점은 1 이상이어야 합니다.")
 	private Integer maxScore;
+
+	/** 첨부파일 (선택). 확장자 · 크기 검증은 FileStorage에서 한다. */
+	private MultipartFile file;
 
 	/** 수정 폼에 기존 값을 채우기 위한 변환 */
 	public static AssignmentRequest from(AssignmentResponse assignment) {

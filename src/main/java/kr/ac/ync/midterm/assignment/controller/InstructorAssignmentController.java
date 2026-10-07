@@ -21,6 +21,7 @@ import kr.ac.ync.midterm.assignment.service.AssignmentService;
 import kr.ac.ync.midterm.course.dto.response.CourseDetailResponse;
 import kr.ac.ync.midterm.course.service.CourseService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
+import kr.ac.ync.midterm.global.storage.InvalidFileException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -69,6 +70,8 @@ public class InstructorAssignmentController {
 				return "redirect:/instructor/courses/" + courseId;
 			} catch (InvalidAssignmentPeriodException e) {
 				bindingResult.rejectValue("endAt", "period.invalid", e.getMessage());
+			} catch (InvalidFileException e) {
+				bindingResult.rejectValue("file", "file.invalid", e.getMessage());
 			}
 		}
 
@@ -87,6 +90,8 @@ public class InstructorAssignmentController {
 		model.addAttribute("assignmentRequest", AssignmentRequest.from(assignment));
 		model.addAttribute("formAction", "/instructor/assignments/" + id + "/edit");
 		model.addAttribute("editing", true);
+		model.addAttribute("assignmentId", id);
+		model.addAttribute("currentFileName", assignment.originalFilename());
 		return FORM_VIEW;
 	}
 
@@ -104,12 +109,16 @@ public class InstructorAssignmentController {
 				return "redirect:/instructor/courses/" + assignment.courseId();
 			} catch (InvalidAssignmentPeriodException e) {
 				bindingResult.rejectValue("endAt", "period.invalid", e.getMessage());
+			} catch (InvalidFileException e) {
+				bindingResult.rejectValue("file", "file.invalid", e.getMessage());
 			}
 		}
 
 		model.addAttribute("course", courseService.findMyCourseDetail(user.getId(), assignment.courseId()));
 		model.addAttribute("formAction", "/instructor/assignments/" + id + "/edit");
 		model.addAttribute("editing", true);
+		model.addAttribute("assignmentId", id);
+		model.addAttribute("currentFileName", assignment.originalFilename());
 		return FORM_VIEW;
 	}
 

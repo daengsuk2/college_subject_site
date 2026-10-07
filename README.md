@@ -169,7 +169,11 @@ src/main/resources/
 assignment 1:N submission, users(학생) 1:N submission.
 
 ### 추가한 컬럼과 이유
-현재 없음. 컬럼을 추가하면 여기에 이유와 함께 기록합니다.
+| 테이블.컬럼 | 이유 | 추가한 기능 |
+|-------------|------|-------------|
+| assignment.original_filename (nullable) | 첨부파일은 서버에 UUID 이름으로 저장하므로(`file_path`), 다운로드 때 사용자가 올린 원래 파일명을 보여 주기 위해 | I3-b 과제 첨부파일 |
+
+컬럼을 더 추가하면 여기에 이유와 함께 기록합니다.
 
 ## 비즈니스 규칙
 
