@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>수강 등록</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">수강 등록</h1>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <!-- 참여코드로 수강 등록 (S1) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">참여코드 입력</h6>
+        </div>
+        <div class="card-body">
+            <p class="text-gray-600">강사에게 받은 참여코드를 입력하면 해당 강좌에 수강 등록됩니다.</p>
+            <form th:action="@{/student/courses/join}" th:object="${enrollRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <input type="text" th:field="*{joinCode}" class="form-control text-uppercase"
+                           th:classappend="${#fields.hasErrors('joinCode')} ? 'is-invalid'"
+                           placeholder="참여코드 (예: AB3K9X)" autocomplete="off">
+                    <div class="invalid-feedback" th:errors="*{joinCode}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">등록</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
