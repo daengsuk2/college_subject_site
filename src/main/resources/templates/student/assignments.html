@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>내 과제</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">내 과제</h1>
+
+    <!-- 수강 중인 강좌의 과제 목록 (S2) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">과제 목록</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>강좌</th>
+                        <th>제목</th>
+                        <th>시작일시</th>
+                        <th>종료일시</th>
+                        <th>배점</th>
+                        <th>상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="assignment : ${assignments}">
+                        <td th:text="${assignment.courseName}"></td>
+                        <td>
+                            <a th:href="@{/student/assignments/{id}(id=${assignment.id})}"
+                               th:text="${assignment.title}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${assignment.maxScore}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${assignment.status.badgeClass}"
+                                  th:text="${assignment.status.label}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(assignments)}">
+                        <td colspan="6" class="text-center text-gray-600">
+                            표시할 과제가 없습니다. 참여코드로 수강 등록을 하면 강좌의 과제가 여기에 나타납니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/student/courses/join}" class="btn btn-secondary">수강 등록하기</a>
+</div>
+</body>
+</html>
