@@ -65,6 +65,17 @@ public class Assignment {
 		this.filePath = filePath;
 	}
 
+	/**
+	 * 과제 내용 수정 (I3). 기간 검증(B7)은 서비스에서 한다.
+	 */
+	public void update(String title, String content, LocalDateTime startAt, LocalDateTime endAt, int maxScore) {
+		this.title = title;
+		this.content = content;
+		this.startAt = startAt;
+		this.endAt = endAt;
+		this.maxScore = maxScore;
+	}
+
 	@PrePersist
 	void onCreate() {
 		this.createdAt = LocalDateTime.now();

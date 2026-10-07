@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import kr.ac.ync.midterm.assignment.service.AssignmentService;
 import kr.ac.ync.midterm.course.dto.request.CourseCreateRequest;
 import kr.ac.ync.midterm.course.dto.response.CourseResponse;
 import kr.ac.ync.midterm.course.service.CourseService;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class InstructorCourseController {
 
 	private final CourseService courseService;
+	private final AssignmentService assignmentService;
 
 	@GetMapping
 	public String list(@AuthenticationPrincipal CustomUserDetails user, Model model) {
@@ -51,12 +53,13 @@ public class InstructorCourseController {
 	}
 
 	/**
-	 * 강좌 상세 + 수강생 목록 (I2). 없는 강좌 404, 다른 강사의 강좌 403은 서비스에서 처리한다.
+	 * 강좌 상세 + 수강생 목록 (I2) + 과제 목록 (I3). 없는 강좌 404, 다른 강사의 강좌 403은 서비스에서 처리한다.
 	 */
 	@GetMapping("/{id}")
 	public String detail(@AuthenticationPrincipal CustomUserDetails user,
 			@PathVariable Long id, Model model) {
 		model.addAttribute("course", courseService.findMyCourseDetail(user.getId(), id));
+		model.addAttribute("assignments", assignmentService.findMyAssignments(user.getId(), id));
 		return "instructor/course-detail";
 	}
 }
