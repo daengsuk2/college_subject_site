@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>과제 제출</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800" th:text="${resubmit} ? '다시 제출' : '과제 제출'">과제 제출</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <span th:text="${assignment.courseName}">강좌</span> · <span th:text="${assignment.title}">과제</span>
+            </h6>
+        </div>
+        <div class="card-body">
+            <p class="text-gray-600">
+                제출 마감: <span th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></span>
+                <span th:if="${resubmit}"> · 마감 전까지는 다시 제출하면 이전 제출이 덮어써집니다.</span>
+            </p>
+            <form th:action="@{/student/assignments/{id}/submit(id=${assignment.id})}"
+                  th:object="${submissionRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="submissionContent">제출 내용</label>
+                    <textarea id="submissionContent" th:field="*{content}" rows="10" class="form-control"
+                              th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{content}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${resubmit} ? '다시 제출' : '제출'">제출</button>
+                <a th:href="@{/student/assignments/{id}(id=${assignment.id})}" class="btn btn-secondary">취소</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

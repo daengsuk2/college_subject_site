@@ -13,6 +13,9 @@
               th:text="${assignment.status.label}"></span>
     </h1>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">과제 정보</h6>
@@ -44,6 +47,32 @@
         <div class="card-body">
             <!-- 줄바꿈은 보존하되 HTML은 이스케이프된다 -->
             <p class="mb-0" style="white-space: pre-wrap;" th:text="${assignment.content}"></p>
+        </div>
+    </div>
+
+    <!-- 내 제출 (S3). 제출 가능 여부는 버튼 표시일 뿐이고 서버가 다시 검사한다 (B1, B4) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">내 제출</h6>
+        </div>
+        <div class="card-body">
+            <div th:if="${submission != null}">
+                <p class="mb-2">
+                    <span class="badge" th:classappend="${submission.graded} ? 'badge-primary' : 'badge-success'"
+                          th:text="${submission.graded} ? '채점 완료' : '제출함'"></span>
+                    <span class="text-gray-600 ml-2"
+                          th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')} + ' 제출'"></span>
+                </p>
+                <p class="mb-3" style="white-space: pre-wrap;" th:text="${submission.content}"></p>
+            </div>
+            <p th:if="${submission == null}" class="text-gray-600">아직 제출하지 않았습니다.</p>
+
+            <a th:if="${assignment.status.name() == 'IN_PROGRESS' and (submission == null or !submission.graded)}"
+               th:href="@{/student/assignments/{id}/submit(id=${assignment.id})}" class="btn btn-primary"
+               th:text="${submission == null} ? '제출하기' : '다시 제출'">제출하기</a>
+            <span th:if="${assignment.status.name() == 'UPCOMING'}" class="text-gray-600">아직 제출 기간이 아닙니다.</span>
+            <span th:if="${assignment.status.name() == 'CLOSED'}" class="text-gray-600">제출 기간이 지났습니다.</span>
+            <span th:if="${submission != null and submission.graded}" class="text-gray-600">채점 완료된 과제는 다시 제출할 수 없습니다.</span>
         </div>
     </div>
 
