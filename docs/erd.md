@@ -93,6 +93,7 @@ erDiagram
 | 컬럼 | 이유 | 추가한 기능 |
 |------|------|-------------|
 | assignment.original_filename (nullable) | 저장명(`file_path`)은 UUID이므로 다운로드 시 원래 파일명을 보여 주기 위해 | I3-b (확정) |
+| submission.original_filename (nullable) | 제출 파일의 저장명(`file_path`)도 UUID이므로 다운로드 시 학생이 올린 원래 파일명을 보여 주기 위해 | S3-b (확정) |
 
 ## 추가 컬럼 후보
 
@@ -100,6 +101,5 @@ erDiagram
 
 | 후보 | 이유 | 필요성 |
 |------|------|--------|
-| submission.original_filename | 학생이 제출한 파일의 원래 파일명을 보여 주기 위해 | 제출 파일 첨부(S3)를 구현하면 필요 |
 | users.created_at | 가입일 기록 | 낮음 |
 | course.description | 강좌 설명 표시 | 낮음 |

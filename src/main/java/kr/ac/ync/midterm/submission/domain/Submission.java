@@ -47,6 +47,10 @@ public class Submission {
 	@Column(name = "file_path")
 	private String filePath;
 
+	/** 다운로드 시 보여 줄 원본 파일명 (file_path는 서버에 저장된 UUID 이름) */
+	@Column(name = "original_filename")
+	private String originalFilename;
+
 	@Column(name = "submitted_at", nullable = false)
 	private LocalDateTime submittedAt;
 
@@ -76,6 +80,16 @@ public class Submission {
 	public void resubmit(String content, LocalDateTime submittedAt) {
 		this.content = content;
 		this.submittedAt = submittedAt;
+	}
+
+	/** 첨부파일을 연결한다 (S3-b). 기존 첨부가 있으면 교체되며, 기존 파일 삭제는 서비스에서 한다. */
+	public void attachFile(String storedName, String originalFilename) {
+		this.filePath = storedName;
+		this.originalFilename = originalFilename;
+	}
+
+	public boolean hasFile() {
+		return filePath != null;
 	}
 
 	public boolean isGraded() {

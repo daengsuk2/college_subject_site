@@ -16,6 +16,7 @@ import kr.ac.ync.midterm.assignment.domain.AssignmentStatus;
 import kr.ac.ync.midterm.assignment.dto.response.StudentAssignmentResponse;
 import kr.ac.ync.midterm.assignment.service.StudentAssignmentService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
+import kr.ac.ync.midterm.global.storage.InvalidFileException;
 import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
 import kr.ac.ync.midterm.submission.exception.AlreadyGradedException;
@@ -54,6 +55,8 @@ public class StudentSubmissionController {
 
 		model.addAttribute("assignment", assignment);
 		model.addAttribute("resubmit", submission != null);
+		model.addAttribute("submissionId", submission != null ? submission.id() : null);
+		model.addAttribute("currentFileName", submission != null ? submission.originalFilename() : null);
 		model.addAttribute("submissionRequest",
 				submission != null ? SubmissionRequest.from(submission) : new SubmissionRequest());
 		return FORM_VIEW;
@@ -65,20 +68,26 @@ public class StudentSubmissionController {
 			@Valid @ModelAttribute SubmissionRequest submissionRequest,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 		StudentAssignmentResponse assignment = studentAssignmentService.findMyAssignment(user.getId(), assignmentId);
-		boolean resubmit = submissionService.findMySubmission(user.getId(), assignmentId).isPresent();
+		SubmissionResponse current = submissionService.findMySubmission(user.getId(), assignmentId).orElse(null);
+		boolean resubmit = current != null;
 
 		if (!bindingResult.hasErrors()) {
 			try {
 				submissionService.submit(user.getId(), assignmentId, submissionRequest);
 				redirectAttributes.addFlashAttribute("message", resubmit ? "다시 제출했습니다." : "제출했습니다.");
+				return "redirect:/student/assignments/" + assignmentId;
 			} catch (SubmissionPeriodException | AlreadyGradedException e) {
 				redirectAttributes.addFlashAttribute("error", e.getMessage());
+				return "redirect:/student/assignments/" + assignmentId;
+			} catch (InvalidFileException e) {
+				bindingResult.rejectValue("file", "file.invalid", e.getMessage());
 			}
-			return "redirect:/student/assignments/" + assignmentId;
 		}
 
 		model.addAttribute("assignment", assignment);
 		model.addAttribute("resubmit", resubmit);
+		model.addAttribute("submissionId", current != null ? current.id() : null);
+		model.addAttribute("currentFileName", current != null ? current.originalFilename() : null);
 		return FORM_VIEW;
 	}
 }
