@@ -34,7 +34,7 @@
 | X26 | 피드백 템플릿 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
 | X27 | 채점 결과 알림 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5), [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X28 | 점수 공개 시점 설정 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
-| X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
+| X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 구현됨 |
 | X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 구현됨 |
 | X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 구현됨 |
 | X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 구현됨 |
@@ -243,12 +243,13 @@
   - 과제 또는 강좌에 공개 일시나 공개 여부 컬럼이 필요하다 (README에 이유 기록).
   - 공개 전에는 "채점 대기"로 보일지 "채점 완료(비공개)"로 보일지 정해야 한다.
 
-## X29. 이의 신청
+## X29. 이의 신청 (구현됨)
 - 출처: [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) S4 개선점 — 이의 신청
 - 학생이 점수에 이의를 남기고 강사가 확인하는 기능이다.
 - 고려할 점
   - 이의 내용을 저장할 컬럼이나 테이블이 필요하다.
   - 재채점(점수 수정)과 이어지는 흐름을 정해야 한다.
+  - 구현: `submission`에 이의 내용 · 시각, 답변 · 시각 컬럼 4개를 추가했다(새 테이블 없음). 채점 후 제출당 1회 신청, 강사는 답변 시 점수를 함께 고칠 수 있다(0 ~ 배점).
 
 ## X30. 동시 제출 시 안내 화면 (구현됨)
 - 출처: [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) S3-a 확인하지 못한 것 — 동시 이중 제출

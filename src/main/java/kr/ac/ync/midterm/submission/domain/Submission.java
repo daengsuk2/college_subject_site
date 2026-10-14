@@ -66,6 +66,20 @@ public class Submission {
 	@Column(name = "graded_at")
 	private LocalDateTime gradedAt;
 
+	/** 학생의 이의 신청 내용 (X29). 제출당 1회만 신청할 수 있어 값이 있으면 신청한 것이다. */
+	@Column(name = "objection_content", length = 500)
+	private String objectionContent;
+
+	@Column(name = "objection_at")
+	private LocalDateTime objectionAt;
+
+	/** 강사의 이의 답변 (X29) */
+	@Column(name = "objection_response", length = 500)
+	private String objectionResponse;
+
+	@Column(name = "objection_responded_at")
+	private LocalDateTime objectionRespondedAt;
+
 	@Builder
 	private Submission(Assignment assignment, User student, String content, String filePath,
 			LocalDateTime submittedAt) {
@@ -104,6 +118,26 @@ public class Submission {
 		this.feedback = feedback;
 		this.gradedAt = gradedAt;
 		this.status = SubmissionStatus.GRADED;
+	}
+
+	/** 이의 신청 (X29): 채점 완료 · 1회 제한은 서비스에서 먼저 검사한다. */
+	public void raiseObjection(String content, LocalDateTime raisedAt) {
+		this.objectionContent = content;
+		this.objectionAt = raisedAt;
+	}
+
+	/** 이의 답변 (X29): 신청이 있고 아직 답변하지 않았는지는 서비스에서 먼저 검사한다. */
+	public void answerObjection(String response, LocalDateTime respondedAt) {
+		this.objectionResponse = response;
+		this.objectionRespondedAt = respondedAt;
+	}
+
+	public boolean hasObjection() {
+		return objectionContent != null;
+	}
+
+	public boolean hasObjectionResponse() {
+		return objectionResponse != null;
 	}
 
 	public boolean isGraded() {

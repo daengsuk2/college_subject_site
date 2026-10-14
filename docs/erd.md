@@ -94,6 +94,8 @@ erDiagram
 |------|------|-------------|
 | assignment.original_filename (nullable) | 저장명(`file_path`)은 UUID이므로 다운로드 시 원래 파일명을 보여 주기 위해 | I3-b (확정) |
 | submission.original_filename (nullable) | 제출 파일의 저장명(`file_path`)도 UUID이므로 다운로드 시 학생이 올린 원래 파일명을 보여 주기 위해 | S3-b (확정) |
+| submission.objection_content · objection_at (nullable) | 학생의 이의 신청 내용(500자 이하)과 신청 시각. 값이 있으면 신청한 것이고 제출당 1회만 가능 | X29 (확정) |
+| submission.objection_response · objection_responded_at (nullable) | 강사의 이의 답변(500자 이하)과 답변 시각. 값이 있으면 답변 완료 | X29 (확정) |
 
 ## 추가 컬럼 후보
 

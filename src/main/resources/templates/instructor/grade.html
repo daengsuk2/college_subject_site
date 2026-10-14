@@ -12,6 +12,9 @@
         <span th:text="${submission.courseName}">강좌명</span> · <span th:text="${submission.assignmentTitle}">과제명</span>
     </p>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
     <!-- 제출 내용 -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -35,6 +38,40 @@
             </dl>
             <!-- 줄바꿈은 보존하되 HTML은 이스케이프된다 -->
             <p class="mb-0" style="white-space: pre-wrap;" th:text="${submission.content}"></p>
+        </div>
+    </div>
+
+    <!-- 이의 신청 (X29) -->
+    <div class="card shadow mb-4" th:if="${submission.hasObjection()}" id="objectionCard">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-warning">이의 신청
+                <span class="badge ml-1" th:classappend="${submission.hasObjectionResponse()} ? 'badge-success' : 'badge-warning'"
+                      th:text="${submission.hasObjectionResponse()} ? '답변 완료' : '접수됨'"></span></h6>
+        </div>
+        <div class="card-body">
+            <p class="text-gray-600 mb-1" th:text="${#temporals.format(submission.objectionAt, 'yyyy-MM-dd HH:mm')} + ' 신청'"></p>
+            <p style="white-space: pre-wrap;" id="objectionContent" th:text="${submission.objectionContent}"></p>
+            <div th:if="${submission.hasObjectionResponse()}">
+                <hr>
+                <p class="text-gray-600 mb-1"
+                   th:text="${#temporals.format(submission.objectionRespondedAt, 'yyyy-MM-dd HH:mm')} + ' 답변'"></p>
+                <p class="mb-0" style="white-space: pre-wrap;" id="objectionResponse" th:text="${submission.objectionResponse}"></p>
+            </div>
+            <form th:unless="${submission.hasObjectionResponse()}" id="objectionResponseForm" method="post"
+                  th:action="@{/instructor/submissions/{id}/objection(id=${submission.submissionId})}">
+                <hr>
+                <div class="form-group">
+                    <label for="response">답변 (500자 이하)</label>
+                    <textarea id="response" name="response" rows="3" maxlength="500" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="objectionScore"
+                           th:text="'점수 수정 (선택, 0 ~ ' + ${submission.maxScore} + ', 비우면 점수 유지)'">점수 수정</label>
+                    <input type="number" id="objectionScore" name="score" class="form-control" min="0"
+                           th:max="${submission.maxScore}">
+                </div>
+                <button type="submit" class="btn btn-warning">답변 저장</button>
+            </form>
         </div>
     </div>
 

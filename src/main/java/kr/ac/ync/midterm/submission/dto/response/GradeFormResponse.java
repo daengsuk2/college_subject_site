@@ -11,7 +11,9 @@ import kr.ac.ync.midterm.user.domain.User;
  */
 public record GradeFormResponse(Long submissionId, Long assignmentId, String courseName, String assignmentTitle,
 		int maxScore, String studentNo, String studentName, String content, LocalDateTime submittedAt,
-		String originalFilename, SubmissionStatus status, Integer score, String feedback) {
+		String originalFilename, SubmissionStatus status, Integer score, String feedback,
+		String objectionContent, LocalDateTime objectionAt, String objectionResponse,
+		LocalDateTime objectionRespondedAt) {
 
 	public static GradeFormResponse of(Submission submission) {
 		User student = submission.getStudent();
@@ -20,7 +22,17 @@ public record GradeFormResponse(Long submissionId, Long assignmentId, String cou
 				submission.getAssignment().getMaxScore(), student.getStudentNo(), student.getName(),
 				submission.getContent(), submission.getSubmittedAt(),
 				submission.hasFile() ? submission.getOriginalFilename() : null,
-				submission.getStatus(), submission.getScore(), submission.getFeedback());
+				submission.getStatus(), submission.getScore(), submission.getFeedback(),
+				submission.getObjectionContent(), submission.getObjectionAt(), submission.getObjectionResponse(),
+				submission.getObjectionRespondedAt());
+	}
+
+	public boolean hasObjection() {
+		return objectionContent != null;
+	}
+
+	public boolean hasObjectionResponse() {
+		return objectionResponse != null;
 	}
 
 	public boolean isGraded() {

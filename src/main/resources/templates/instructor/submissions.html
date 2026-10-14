@@ -77,6 +77,7 @@
                         <td>
                             <span class="badge" th:classappend="${row.graded} ? 'badge-primary' : 'badge-success'"
                                   th:text="${row.graded} ? '채점 완료' : '제출함'"></span>
+                            <span class="badge badge-warning" th:if="${row.objectionPending}">이의 접수</span>
                         </td>
                         <td th:attr="data-order=${row.graded} ? ${row.score} : -1">
                             <span th:if="${row.graded}" th:text="${row.score} + ' / ' + ${status.maxScore}"></span>
