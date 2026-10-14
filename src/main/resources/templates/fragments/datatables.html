@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- 표 검색 · 정렬 (X7 · X12 · X16). 표가 있는 화면의 style / script 조각에서만 불러온다 -->
+<th:block th:fragment="style">
+    <link th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" type="text/css">
+</th:block>
+
+<th:block th:fragment="script">
+    <script th:src="@{/vendor/datatables/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+    <script th:src="@{/js/datatables-init.js}"></script>
+</th:block>
+</body>
+</html>

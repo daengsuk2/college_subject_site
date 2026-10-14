@@ -52,7 +52,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive" th:if="${status.submittedCount > 0}">
-                <table class="table table-bordered" width="100%" cellspacing="0" id="submittedTable">
+                <table class="table table-bordered js-datatable" width="100%" cellspacing="0" id="submittedTable">
                     <thead>
                     <tr>
                         <th>학번</th>
@@ -61,19 +61,19 @@
                         <th>상태</th>
                         <th>점수</th>
                         <th>첨부파일</th>
-                        <th style="width: 100px;">채점</th>
+                        <th class="no-sort" style="width: 100px;">채점</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="row : ${status.submitted}">
                         <td th:text="${row.studentNo}"></td>
                         <td th:text="${row.studentName}"></td>
-                        <td th:text="${#temporals.format(row.submittedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(row.submittedAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(row.submittedAt, 'yyyyMMddHHmm')}"></td>
                         <td>
                             <span class="badge" th:classappend="${row.graded} ? 'badge-primary' : 'badge-success'"
                                   th:text="${row.graded} ? '채점 완료' : '제출함'"></span>
                         </td>
-                        <td>
+                        <td th:attr="data-order=${row.graded} ? ${row.score} : -1">
                             <span th:if="${row.graded}" th:text="${row.score} + ' / ' + ${status.maxScore}"></span>
                             <span th:unless="${row.graded}" class="text-gray-600">-</span>
                         </td>
@@ -102,7 +102,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive" th:if="${status.notSubmittedCount > 0}">
-                <table class="table table-bordered" width="100%" cellspacing="0" id="notSubmittedTable">
+                <table class="table table-bordered js-datatable" width="100%" cellspacing="0" id="notSubmittedTable">
                     <thead>
                     <tr>
                         <th>학번</th>
@@ -125,5 +125,7 @@
 
     <a th:href="@{/instructor/courses/{id}(id=${status.courseId})}" class="btn btn-secondary">&larr; 강좌 상세</a>
 </div>
+<th:block layout:fragment="style"><th:block th:replace="~{fragments/datatables :: style}"></th:block></th:block>
+<th:block layout:fragment="script"><th:block th:replace="~{fragments/datatables :: script}"></th:block></th:block>
 </body>
 </html>
