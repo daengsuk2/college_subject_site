@@ -101,9 +101,11 @@ src/main/java/kr/ac/ync/midterm/
 │  ├─ exception/   DuplicateEmailException
 │  ├─ repository/  UserRepository
 │  └─ service/     UserService, UserServiceImpl
-├─ course/         domain, repository   (Course, Enrollment)
-├─ assignment/     domain, repository   (Assignment)
-├─ submission/     domain, repository   (Submission, SubmissionStatus)
+├─ course/         강좌 개설 · 수강 등록 · 수강생 목록 (Course, Enrollment)
+├─ assignment/     과제 등록 · 수정 · 삭제, 첨부파일, 내 과제 (Assignment, AssignmentStatus)
+├─ submission/     제출 · 재제출, 제출 파일, 제출 현황, 채점, 내 제출 (Submission, SubmissionStatus)
+├─ stats/          강사 통계 대시보드 (/instructor/stats)
+├─ dashboard/      역할별 대시보드 집계 (학생 S5, 강사)
 └─ home/controller/HomeController.java  # 대시보드 (/)
 
 src/test/java/kr/ac/ync/midterm/       # main과 같은 패키지 구조로 테스트 작성
@@ -153,7 +155,7 @@ src/main/resources/
 | S2 | 내 과제 목록 (예정 · 진행중 · 마감 배지) | 완료 |
 | S3 | 과제 제출 · 재제출 (내용 + 첨부파일) | 완료 |
 | S4 | 결과 확인 (점수 · 피드백) | 완료 |
-| S5 | 내 통계 | 예정 |
+| S5 | 내 통계 | 완료 |
 
 ## DB 설계 (테이블 5개)
 

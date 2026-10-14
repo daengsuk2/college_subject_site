@@ -16,4 +16,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
 	// B5: 강사는 본인이 개설한 강좌만 조회한다
 	List<Course> findByInstructorIdOrderByCreatedAtDesc(Long instructorId);
+
+	// 강사 대시보드: 내 강좌 수
+	long countByInstructorId(Long instructorId);
 }

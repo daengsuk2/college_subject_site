@@ -8,11 +8,168 @@
 <body>
 <div layout:fragment="content">
     <h1 class="h3 mb-4 text-gray-800">대시보드</h1>
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            역할별 대시보드(카드 + 차트)가 여기에 들어갑니다.
+
+    <!-- 학생 대시보드 (S5): 수강 강좌의 시작된 과제와 내 제출만 집계된다 -->
+    <th:block th:if="${student != null}">
+        <div class="row mb-4">
+            <div class="col-md-3 mb-2">
+                <div class="card border-left-primary shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">수강 강좌</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="courseCount"
+                             th:text="${student.courseCount} + '개'">0개</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="card border-left-success shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">제출률</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="submissionRate"
+                             th:text="${student.submissionRate() != null} ? ${#numbers.formatDecimal(student.submissionRate(), 1, 1)} + '%' : '-'">-</div>
+                        <div class="small text-gray-600" id="submissionDetail"
+                             th:text="${student.submittedCount} + ' / ' + ${student.startedAssignmentCount} + '개 제출'"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="card border-left-info shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">평균 점수</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="averageScore"
+                             th:text="${student.averageScore != null} ? ${#numbers.formatDecimal(student.averageScore, 1, 1)} + '점' : '-'">-</div>
+                        <div class="small text-gray-600" id="averageRate"
+                             th:if="${student.averageScoreRate != null}"
+                             th:text="'배점 대비 ' + ${#numbers.formatDecimal(student.averageScoreRate, 1, 1)} + '%'"></div>
+                        <div class="small text-gray-600" th:if="${student.averageScoreRate == null}">채점된 제출이 없습니다</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <div class="card border-left-warning shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">마감 임박</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="dueSoonCount"
+                             th:text="${student.dueSoonCount()} + '개'">0개</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-warning">마감 임박 과제 (24시간 이내, 아직 제출하지 않은 과제)</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" th:if="${!#lists.isEmpty(student.dueSoon)}">
+                    <table class="table table-bordered" width="100%" cellspacing="0" id="dueSoonTable">
+                        <thead>
+                        <tr>
+                            <th>과제</th>
+                            <th>강좌</th>
+                            <th>종료일시</th>
+                            <th>남은 시간</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${student.dueSoon}">
+                            <td>
+                                <a th:href="@{/student/assignments/{id}(id=${row.assignmentId})}"
+                                   th:text="${row.title}"></a>
+                            </td>
+                            <td th:text="${row.courseName}"></td>
+                            <td th:text="${#temporals.format(row.endAt, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td th:text="${row.remainingText()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-gray-600 mb-0" th:if="${#lists.isEmpty(student.dueSoon)}">
+                    마감이 임박한 과제가 없습니다.</p>
+            </div>
+        </div>
+
+        <p class="text-gray-600" th:if="${student.courseCount == 0}">
+            아직 수강 등록한 강좌가 없습니다. 사이드바의 수강 등록에서 참여코드를 입력해 보세요.
+        </p>
+    </th:block>
+
+    <!-- 강사 대시보드: 본인 강좌의 데이터만 집계된다 (B5) -->
+    <th:block th:if="${instructor != null}">
+        <div class="row mb-4">
+            <div class="col-md-4 mb-2">
+                <div class="card border-left-primary shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">내 강좌</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="courseCount"
+                             th:text="${instructor.courseCount} + '개'">0개</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card border-left-success shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">진행중 과제</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="inProgressCount"
+                             th:text="${instructor.inProgressAssignmentCount} + '개'">0개</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card border-left-warning shadow py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">채점 대기</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="pendingCount"
+                             th:text="${instructor.pendingGradingCount} + '건'">0건</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">최근 제출</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" th:if="${!#lists.isEmpty(instructor.recentSubmissions)}">
+                    <table class="table table-bordered" width="100%" cellspacing="0" id="recentTable">
+                        <thead>
+                        <tr>
+                            <th>학생</th>
+                            <th>과제</th>
+                            <th>강좌</th>
+                            <th>제출 시각</th>
+                            <th>상태</th>
+                            <th style="width: 90px;">채점</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${instructor.recentSubmissions}">
+                            <td>
+                                <span th:text="${row.studentName}"></span>
+                                (<span th:text="${row.studentNo}"></span>)
+                            </td>
+                            <td th:text="${row.assignmentTitle}"></td>
+                            <td th:text="${row.courseName}"></td>
+                            <td th:text="${#temporals.format(row.submittedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td>
+                                <span class="badge" th:classappend="${row.graded} ? 'badge-primary' : 'badge-success'"
+                                      th:text="${row.graded} ? '채점 완료' : '제출함'"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{/instructor/submissions/{id}/grade(id=${row.submissionId})}"
+                                   class="btn btn-sm" th:classappend="${row.graded} ? 'btn-secondary' : 'btn-primary'"
+                                   th:text="${row.graded} ? '수정' : '채점'">채점</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-gray-600 mb-0" th:if="${#lists.isEmpty(instructor.recentSubmissions)}">
+                    아직 제출된 과제가 없습니다.</p>
+            </div>
+        </div>
+    </th:block>
 </div>
 </body>
 </html>
