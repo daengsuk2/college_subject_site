@@ -168,7 +168,7 @@ class AssignmentServiceFileTest {
 	// ---------- 수정 ----------
 
 	@Test
-	@DisplayName("update - 새 파일을 올리면 첨부가 교체되고 기존 파일은 삭제됨")
+	@DisplayName("update - 새 파일을 올리면 첨부가 교체됨 (기존 파일은 커밋 뒤에 삭제되며 FileConsistencyTest에서 확인)")
 	void update_replaceFile() {
 		// given
 		Assignment assignment = created(file("old.pdf", "옛날 파일"));
@@ -182,8 +182,7 @@ class AssignmentServiceFileTest {
 		assertThat(saved.getOriginalFilename()).isEqualTo("new.pdf");
 		assertThat(saved.getFilePath()).isNotEqualTo(oldStoredName);
 		assertThat(fileStorage.exists(saved.getFilePath())).isTrue();
-		assertThat(fileStorage.exists(oldStoredName)).isFalse();
-		assertThat(UploadTestSupport.fileCount()).isEqualTo(1);
+		// 이전 파일은 DB 변경이 확정된 뒤에 지워진다 (커밋하지 않는 이 테스트에서는 남아 있다. 커밋 · 롤백 시 파일 상태는 FileConsistencyTest에서 확인한다)
 	}
 
 	@Test
@@ -241,7 +240,7 @@ class AssignmentServiceFileTest {
 	// ---------- 삭제 ----------
 
 	@Test
-	@DisplayName("delete - 과제를 삭제하면 첨부 파일도 삭제됨")
+	@DisplayName("delete - 과제를 삭제하면 과제가 지워짐 (첨부 파일은 커밋 뒤에 삭제되며 FileConsistencyTest에서 확인)")
 	void delete_removesFile() {
 		// given
 		Assignment assignment = created(file("a.pdf", "x"));
@@ -252,8 +251,7 @@ class AssignmentServiceFileTest {
 
 		// then
 		assertThat(assignmentRepository.findById(assignment.getId())).isEmpty();
-		assertThat(fileStorage.exists(storedName)).isFalse();
-		assertThat(UploadTestSupport.fileCount()).isZero();
+		// 첨부 파일은 DB 삭제가 확정된 뒤에 지워진다 (FileConsistencyTest에서 확인)
 	}
 
 	@Test

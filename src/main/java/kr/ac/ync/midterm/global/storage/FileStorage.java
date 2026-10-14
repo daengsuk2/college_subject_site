@@ -126,6 +126,25 @@ public class FileStorage {
 		}
 	}
 
+	/**
+	 * 방금 저장한 새 파일이 DB 변경과 함께 확정되지 못하면(트랜잭션이 롤백되면) 삭제한다. 커밋되면 그대로 둔다.
+	 * 메서드 안에서 난 예외뿐 아니라 커밋 단계에서 실패하는 경우에도 새 파일이 서버에 남지 않게 한다.
+	 * 트랜잭션 밖에서는 아무것도 하지 않는다. (삭제는 deleteQuietly로 직접 한다)
+	 */
+	public void deleteOnRollback(String storedName) {
+		if (storedName == null || !TransactionSynchronizationManager.isSynchronizationActive()) {
+			return;
+		}
+		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+			@Override
+			public void afterCompletion(int status) {
+				if (status == STATUS_ROLLED_BACK) {
+					deleteQuietly(storedName);
+				}
+			}
+		});
+	}
+
 	// 저장 이름이 폴더 밖을 가리키면(../ 등) 거부한다
 	private Path resolveInsideRoot(String storedName) {
 		if (!StringUtils.hasText(storedName)) {

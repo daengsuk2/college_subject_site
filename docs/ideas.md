@@ -27,7 +27,7 @@
 | X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X20 | 바이러스 검사 · 이미지 미리보기 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X21 | 업로드 진행률 표시 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
-| X22 | DB 커밋 실패 시 삭제한 파일 복구 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
+| X22 | DB 커밋 실패 시 삭제한 파일 복구 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 구현됨 |
 | X23 | 제출 파일 삭제 버튼 (현재는 교체만 가능) | [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 구현됨 |
 | X24 | 일괄 채점 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
 | X25 | 채점 취소 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
@@ -194,11 +194,12 @@
 - 고려할 점
   - 10MB 이하 제한이라 우선순위는 낮다.
 
-## X22. DB 커밋 실패 시 삭제한 파일 복구
+## X22. DB 커밋 실패 시 삭제한 파일 복구 (구현됨)
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 삭제 복구
 - 파일을 먼저 지운 뒤 DB 커밋이 실패하면 지운 파일을 되살릴 수 없다. 드문 경우다.
 - 고려할 점
   - 삭제를 커밋 이후로 미루는 방식(트랜잭션 후처리)을 검토한다.
+  - 구현: 교체 · 삭제로 지우는 이전 파일은 커밋 뒤에(`deleteAfterCommit`), 새로 올린 파일은 롤백되면(`deleteOnRollback`) 지운다. 커밋이 실패해도 이전 파일은 남고 새 파일은 서버에 남지 않는다.
 
 ## X23. 제출 파일 삭제 버튼 (현재는 교체만 가능) (구현됨)
 - 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) S3-b 개선점 — 제출 파일 삭제

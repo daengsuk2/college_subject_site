@@ -183,7 +183,7 @@ class SubmissionFileControllerTest extends BaseController {
 	}
 
 	@Test
-	@DisplayName("POST 재제출 - 새 파일을 올리면 교체되고 이전 파일은 삭제됨, 올리지 않으면 유지됨")
+	@DisplayName("POST 재제출 - 새 파일을 올리면 교체됨 (이전 파일은 커밋 뒤에 삭제되며 FileConsistencyTest에서 확인), 올리지 않으면 유지됨")
 	void resubmit_replaceAndKeep() throws Exception {
 		mockMvc.perform(submitRequest(assignment.getId(), student, "첫 제출").file(pdf("first.pdf", "첫 파일")));
 		String firstStored = submissionOf(assignment, student).getFilePath();
@@ -193,13 +193,13 @@ class SubmissionFileControllerTest extends BaseController {
 		assertThat(submissionOf(assignment, student).getFilePath()).isEqualTo(firstStored);
 		assertThat(UploadTestSupport.fileCount()).isEqualTo(1);
 
-		// 새 파일을 올리면 교체되고 이전 파일은 지워진다
+		// 새 파일을 올리면 교체된다
 		mockMvc.perform(submitRequest(assignment.getId(), student, "파일도 교체").file(pdf("second.pdf", "둘째 파일")));
 		Submission after = submissionOf(assignment, student);
 		assertThat(submissionRepository.count()).isEqualTo(1);
 		assertThat(after.getOriginalFilename()).isEqualTo("second.pdf");
 		assertThat(after.getFilePath()).isNotEqualTo(firstStored);
-		assertThat(UploadTestSupport.fileCount()).isEqualTo(1);
+		// 이전 파일은 DB 변경이 확정된 뒤에 지워진다 (커밋하지 않는 이 테스트에서는 남아 있다. 커밋 · 롤백 시 파일 상태는 FileConsistencyTest에서 확인한다)
 	}
 
 	// ---------- 거부된 요청에서는 파일을 저장하지 않는다 ----------
