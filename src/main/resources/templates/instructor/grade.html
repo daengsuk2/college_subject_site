@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>채점</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-1 text-gray-800">채점</h1>
+    <p class="text-gray-600 mb-4">
+        <span th:text="${submission.courseName}">강좌명</span> · <span th:text="${submission.assignmentTitle}">과제명</span>
+    </p>
+
+    <!-- 제출 내용 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">제출 내용</h6>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">학생</dt>
+                <dd class="col-sm-9">
+                    <span th:text="${submission.studentName}"></span>
+                    (<span th:text="${submission.studentNo}"></span>)
+                </dd>
+                <dt class="col-sm-3">제출 시각</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')}"></dd>
+                <dt class="col-sm-3">첨부파일</dt>
+                <dd class="col-sm-9">
+                    <a th:if="${submission.hasFile()}" th:href="@{/submissions/{id}/file(id=${submission.submissionId})}"
+                       th:text="${submission.originalFilename}"></a>
+                    <span th:unless="${submission.hasFile()}" class="text-gray-600">없음</span>
+                </dd>
+            </dl>
+            <!-- 줄바꿈은 보존하되 HTML은 이스케이프된다 -->
+            <p class="mb-0" style="white-space: pre-wrap;" th:text="${submission.content}"></p>
+        </div>
+    </div>
+
+    <!-- 점수 · 피드백 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary"
+                th:text="${submission.graded} ? '채점 수정' : '점수와 피드백'">점수와 피드백</h6>
+        </div>
+        <div class="card-body">
+            <p class="text-gray-600" th:if="${submission.graded}">
+                이미 채점한 제출입니다. 고쳐서 저장하면 점수와 피드백이 바뀝니다.
+            </p>
+            <form th:action="@{/instructor/submissions/{id}/grade(id=${submission.submissionId})}"
+                  th:object="${gradeRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="score" th:text="'점수 (0 ~ ' + ${submission.maxScore} + ')'">점수</label>
+                    <input type="number" id="score" th:field="*{score}" class="form-control" min="0"
+                           th:max="${submission.maxScore}"
+                           th:classappend="${#fields.hasErrors('score')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{score}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="feedback">피드백 (선택)</label>
+                    <textarea id="feedback" th:field="*{feedback}" rows="5" class="form-control"
+                              th:classappend="${#fields.hasErrors('feedback')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{feedback}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">저장</button>
+                <a th:href="@{/instructor/assignments/{id}/submissions(id=${submission.assignmentId})}"
+                   class="btn btn-secondary">취소</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -92,6 +92,14 @@ public class Submission {
 		return filePath != null;
 	}
 
+	/** 채점(I5): 점수와 피드백을 기록하고 채점 완료 상태로 바꾼다. 점수 범위(B6)는 서비스에서 먼저 검사한다. */
+	public void grade(int score, String feedback, LocalDateTime gradedAt) {
+		this.score = score;
+		this.feedback = feedback;
+		this.gradedAt = gradedAt;
+		this.status = SubmissionStatus.GRADED;
+	}
+
 	public boolean isGraded() {
 		return this.status == SubmissionStatus.GRADED;
 	}

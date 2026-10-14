@@ -12,6 +12,8 @@
         <span th:text="${status.courseName}">강좌명</span> · <span th:text="${status.assignmentTitle}">과제명</span>
     </p>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
     <!-- 요약 -->
     <div class="row mb-4">
         <div class="col-md-4 mb-2">
@@ -59,6 +61,7 @@
                         <th>상태</th>
                         <th>점수</th>
                         <th>첨부파일</th>
+                        <th style="width: 100px;">채점</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -78,6 +81,11 @@
                             <a th:if="${row.hasFile()}" th:href="@{/submissions/{id}/file(id=${row.submissionId})}"
                                th:text="${row.originalFilename}"></a>
                             <span th:unless="${row.hasFile()}" class="text-gray-600">없음</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/instructor/submissions/{id}/grade(id=${row.submissionId})}"
+                               class="btn btn-sm" th:classappend="${row.graded} ? 'btn-secondary' : 'btn-primary'"
+                               th:text="${row.graded} ? '수정' : '채점'">채점</a>
                         </td>
                     </tr>
                     </tbody>
