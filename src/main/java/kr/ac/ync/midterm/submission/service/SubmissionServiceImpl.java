@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
 import kr.ac.ync.midterm.submission.dto.response.MySubmissionResponse;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
 import kr.ac.ync.midterm.submission.exception.AlreadyGradedException;
+import kr.ac.ync.midterm.submission.exception.AlreadySubmittedException;
 import kr.ac.ync.midterm.submission.exception.SubmissionPeriodException;
 import kr.ac.ync.midterm.submission.repository.SubmissionRepository;
 import kr.ac.ync.midterm.user.repository.UserRepository;
@@ -97,6 +99,12 @@ public class SubmissionServiceImpl implements SubmissionService {
 				}
 				submissionRepository.save(submission);
 			}
+		} catch (DataIntegrityViolationException e) {
+			// 같은 학생의 제출이 동시에 들어와 UNIQUE(assignment_id, student_id)에 걸린 경우: 한 건은 이미 저장되어 있다
+			if (stored != null) {
+				fileStorage.deleteQuietly(stored.storedName());
+			}
+			throw new AlreadySubmittedException();
 		} catch (RuntimeException e) {
 			// 저장에 실패하면 방금 올린 파일이 남지 않게 지운다
 			if (stored != null) {

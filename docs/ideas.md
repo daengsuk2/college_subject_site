@@ -35,7 +35,7 @@
 | X27 | 채점 결과 알림 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5), [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X28 | 점수 공개 시점 설정 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
-| X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 아이디어 |
+| X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 구현됨 |
 | X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
 | X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
 | X33 | 여러 강좌 비교 | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
@@ -248,7 +248,7 @@
   - 이의 내용을 저장할 컬럼이나 테이블이 필요하다.
   - 재채점(점수 수정)과 이어지는 흐름을 정해야 한다.
 
-## X30. 동시 제출 시 안내 화면
+## X30. 동시 제출 시 안내 화면 (구현됨)
 - 출처: [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) S3-a 확인하지 못한 것 — 동시 이중 제출
 - 같은 학생이 거의 동시에 두 번 제출하면, DB의 UNIQUE 제약으로 1건만 남지만 두 번째 요청은 안내 없이 오류 화면이 나온다. 충돌을 잡아 "이미 제출되었습니다. 다시 확인해 주세요" 같은 안내로 바꾼다.
 - 고려할 점

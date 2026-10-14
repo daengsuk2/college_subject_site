@@ -20,6 +20,7 @@ import kr.ac.ync.midterm.global.storage.InvalidFileException;
 import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
 import kr.ac.ync.midterm.submission.exception.AlreadyGradedException;
+import kr.ac.ync.midterm.submission.exception.AlreadySubmittedException;
 import kr.ac.ync.midterm.submission.exception.SubmissionPeriodException;
 import kr.ac.ync.midterm.submission.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class StudentSubmissionController {
 				submissionService.submit(user.getId(), assignmentId, submissionRequest);
 				redirectAttributes.addFlashAttribute("message", resubmit ? "다시 제출했습니다." : "제출했습니다.");
 				return "redirect:/student/assignments/" + assignmentId;
-			} catch (SubmissionPeriodException | AlreadyGradedException e) {
+			} catch (SubmissionPeriodException | AlreadyGradedException | AlreadySubmittedException e) {
 				redirectAttributes.addFlashAttribute("error", e.getMessage());
 				return "redirect:/student/assignments/" + assignmentId;
 			} catch (InvalidFileException e) {
