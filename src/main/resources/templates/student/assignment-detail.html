@@ -78,6 +78,34 @@
                        th:text="${submission.feedback}"></p>
                     <p class="mb-0 text-gray-600" th:unless="${submission.hasFeedback()}">피드백이 없습니다.</p>
                 </div>
+
+                <!-- 이의 신청 (X29): 채점 후 1회만. 신청하면 내용과 강사 답변이 보인다 -->
+                <div th:if="${submission.graded}" class="border-left-warning pl-3 mb-3" id="objectionArea">
+                    <div th:if="${submission.hasObjection()}">
+                        <p class="mb-1"><strong>이의 신청</strong>
+                            <span class="badge ml-1" th:classappend="${submission.hasObjectionResponse()} ? 'badge-success' : 'badge-warning'"
+                                  th:text="${submission.hasObjectionResponse()} ? '답변 완료' : '접수됨'"></span>
+                            <span class="text-gray-600 ml-2"
+                                  th:text="${#temporals.format(submission.objectionAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+                        <p class="mb-2" style="white-space: pre-wrap;" id="objectionContent" th:text="${submission.objectionContent}"></p>
+                        <div th:if="${submission.hasObjectionResponse()}">
+                            <p class="mb-1"><strong>강사 답변</strong>
+                                <span class="text-gray-600 ml-2"
+                                      th:text="${#temporals.format(submission.objectionRespondedAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+                            <p class="mb-0" style="white-space: pre-wrap;" id="objectionResponse" th:text="${submission.objectionResponse}"></p>
+                        </div>
+                        <p class="mb-0 text-gray-600" th:unless="${submission.hasObjectionResponse()}">강사의 답변을 기다리고 있습니다.</p>
+                    </div>
+                    <form th:unless="${submission.hasObjection()}" id="objectionForm" method="post"
+                          th:action="@{/student/assignments/{id}/submission/objection(id=${assignment.id})}">
+                        <div class="form-group mb-2">
+                            <label for="objectionInput"><strong>이의 신청</strong> (1회만 가능, 500자 이하)</label>
+                            <textarea id="objectionInput" name="content" rows="3" maxlength="500" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-warning"
+                                onclick="return confirm('이의는 한 번만 신청할 수 있습니다. 신청할까요?');">이의 신청</button>
+                    </form>
+                </div>
             </div>
             <p th:if="${submission == null}" class="text-gray-600">아직 제출하지 않았습니다.</p>
 

@@ -9,12 +9,22 @@ import kr.ac.ync.midterm.submission.domain.SubmissionStatus;
  * 학생에게 보여 주는 내 제출.
  */
 public record SubmissionResponse(Long id, String content, LocalDateTime submittedAt, SubmissionStatus status,
-		String originalFilename, Integer score, String feedback) {
+		String originalFilename, Integer score, String feedback, String objectionContent,
+		LocalDateTime objectionAt, String objectionResponse, LocalDateTime objectionRespondedAt) {
 
 	public static SubmissionResponse of(Submission submission) {
 		return new SubmissionResponse(submission.getId(), submission.getContent(), submission.getSubmittedAt(),
 				submission.getStatus(), submission.hasFile() ? submission.getOriginalFilename() : null,
-				submission.getScore(), submission.getFeedback());
+				submission.getScore(), submission.getFeedback(), submission.getObjectionContent(),
+				submission.getObjectionAt(), submission.getObjectionResponse(), submission.getObjectionRespondedAt());
+	}
+
+	public boolean hasObjection() {
+		return objectionContent != null;
+	}
+
+	public boolean hasObjectionResponse() {
+		return objectionResponse != null;
 	}
 
 	public boolean hasFile() {

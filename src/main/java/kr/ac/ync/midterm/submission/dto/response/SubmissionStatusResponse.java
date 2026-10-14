@@ -23,17 +23,24 @@ public record SubmissionStatusResponse(Long assignmentId, Long courseId, String 
 
 	/** 제출자 한 줄. 점수는 채점 전이면 null이다. */
 	public record SubmittedRow(Long submissionId, String studentNo, String studentName, LocalDateTime submittedAt,
-			SubmissionStatus status, Integer score, String originalFilename) {
+			SubmissionStatus status, Integer score, String originalFilename, boolean hasObjection,
+			boolean objectionAnswered) {
 
 		public static SubmittedRow of(Submission submission) {
 			User student = submission.getStudent();
 			return new SubmittedRow(submission.getId(), student.getStudentNo(), student.getName(),
 					submission.getSubmittedAt(), submission.getStatus(), submission.getScore(),
-					submission.hasFile() ? submission.getOriginalFilename() : null);
+					submission.hasFile() ? submission.getOriginalFilename() : null, submission.hasObjection(),
+					submission.hasObjectionResponse());
 		}
 
 		public boolean isGraded() {
 			return status == SubmissionStatus.GRADED;
+		}
+
+		/** 이의가 접수되었고 아직 답변하지 않음 (X29) */
+		public boolean isObjectionPending() {
+			return hasObjection && !objectionAnswered;
 		}
 
 		public boolean hasFile() {
