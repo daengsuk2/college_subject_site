@@ -271,7 +271,8 @@ class SecurityAttackTest extends BaseController {
 			"/",
 			"/instructor/courses",
 			"/instructor/courses/1",
-			"/student/courses/join"
+			"/student/courses/join",
+			"/student/courses"
 	})
 	@DisplayName("로그인하지 않으면 보호된 화면은 로그인 페이지로 이동")
 	void anonymousAccess(String path) throws Exception {

@@ -138,6 +138,7 @@ src/main/resources/
 | U3 | 역할별 메뉴 (강사 / 학생 사이드바 분리) | 완료 (사이드바 분리 + `/instructor/**` · `/student/**` 서버 접근 제한 403, 테스트 통과) |
 | U4 | 강사 계정 (초기 데이터로 생성, 가입 불가) | 완료 (`.env`의 `INSTRUCTOR_*`로 생성) |
 | X1 | 마이페이지 (이름 · 비밀번호 변경, 선택 기능) | 완료 (`/mypage`, DB 변경 없음) |
+| X3 | 내 수강 강좌 보기 (강좌 · 담당 강사 · 등록일 · 시작된 과제 수 · 제출한 과제 수, 선택 기능) | 완료 (`/student/courses`, DB 변경 없음) |
 | X7 · X12 · X16 | 표 검색 · 정렬 (수강생 · 과제 · 강좌 · 제출 현황 · 내 과제 · 내 제출, 내 과제는 강좌 · 상태 필터, 선택 기능) | 완료 (DataTables, 브라우저에서만 처리) |
 
 ### 강사
@@ -207,6 +208,7 @@ assignment 1:N submission, users(학생) 1:N submission.
 | 강사 | `/instructor/assignments/{id}/submissions` | 제출 현황 + 미제출자 |
 | 강사 | `/instructor/submissions/{id}/grade` | 채점 · 피드백 |
 | 강사 | `/instructor/stats` | 통계 대시보드 |
+| 학생 | `/student/courses` | 내 수강 강좌 (수강 등록 후 이동) |
 | 학생 | `/student/courses/join` | 참여코드 입력 |
 | 학생 | `/student/assignments` · `/{id}` | 내 과제 목록 · 상세 + 제출 |
 | 학생 | `/student/submissions` | 내 제출 · 점수 · 피드백 |

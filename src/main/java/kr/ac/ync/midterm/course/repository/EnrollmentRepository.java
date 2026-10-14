@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import kr.ac.ync.midterm.course.domain.Enrollment;
+import kr.ac.ync.midterm.course.dto.response.MyCourseResponse;
 import kr.ac.ync.midterm.stats.dto.response.StudentSubmissionCount;
 import kr.ac.ync.midterm.user.domain.User;
 
@@ -23,6 +24,19 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
 	// I4: 강좌의 수강생 수
 	long countByCourseId(Long courseId);
+
+	// X3: 학생의 수강 강좌 목록 (최근 등록순). 강좌별 시작된 과제 수와 내가 제출한 과제 수를 한 번에 구한다
+	@Query("""
+			select new kr.ac.ync.midterm.course.dto.response.MyCourseResponse(
+				c.id, c.name, i.name, e.joinedAt,
+				(select count(a.id) from Assignment a where a.course.id = c.id and a.startAt <= :now),
+				(select count(s.id) from Submission s
+				 where s.student.id = :studentId and s.assignment.course.id = c.id and s.assignment.startAt <= :now))
+			from Enrollment e join e.course c join c.instructor i
+			where e.student.id = :studentId
+			order by e.joinedAt desc, e.id desc
+			""")
+	List<MyCourseResponse> findMyCourses(@Param("studentId") Long studentId, @Param("now") LocalDateTime now);
 
 	// S5: 학생이 수강 등록한 강좌 수
 	long countByStudentId(Long studentId);

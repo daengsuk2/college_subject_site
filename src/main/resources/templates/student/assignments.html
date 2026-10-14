@@ -92,6 +92,12 @@
             });
 
             // 칸의 글자 앞뒤에 줄바꿈 · 공백이 있어도 일치하도록 \s*를 허용한다
+            // 내 수강 강좌 화면에서 강좌명을 눌러 들어오면 그 강좌가 미리 선택된다 (표에 있는 강좌명일 때만)
+            var wanted = new URLSearchParams(window.location.search).get('course');
+            if (wanted && seen[wanted]) {
+                $('#filterCourse').val(wanted);
+            }
+
             function apply(column, value) {
                 table.column(column).search(value ? '^\\s*' + escape(value) + '\\s*$' : '', true, false);
             }
@@ -100,6 +106,9 @@
                 apply(5, $('#filterStatus').val());
                 table.draw();
             });
+            if ($('#filterCourse').val()) {
+                $('#filterCourse').trigger('change');
+            }
         });
     </script>
 </th:block>

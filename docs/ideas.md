@@ -8,7 +8,7 @@
 |---|----------|------|------|
 | X1 | 마이페이지 (이름 · 비밀번호 변경) | 기획 | 구현됨 |
 | X2 | 학번 · 이름 명단 확인 후 회원가입 | 기획 | 아이디어 |
-| X3 | 내 수강 강좌 보기 | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
+| X3 | 내 수강 강좌 보기 | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 구현됨 |
 | X4 | 수강 등록 정정 (일정 시간 내) | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
 | X5 | 강좌 삭제 (삭제 확인, 데이터 보존) | [PR #10](https://github.com/daengsuk2/college_subject_site/pull/10) (I1) | 아이디어 |
 | X6 | 수강생 제거 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
@@ -57,7 +57,7 @@
   - 이미 가입한 학번의 중복 가입 방지 (그때 `student_no`에 UNIQUE가 필요할 수 있음)
   - **실제 학생 이름과 학번은 공개 저장소에 올리면 안 된다.** 명단 데이터는 `.gitignore`로 제외하고 예시는 가짜 데이터로 만든다.
 
-## X3. 내 수강 강좌 보기
+## X3. 내 수강 강좌 보기 (구현됨)
 - 출처: [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) 개선점 — "내 수강 보는 기능"
 - 학생이 자신이 수강 등록한 강좌 목록을 볼 수 있게 한다. (현재 S1은 등록만 가능하고, 등록 결과는 등록 직후 안내 메시지로만 확인된다.)
 - DB 변경 없이 가능하다 (enrollment에서 본인 행을 조회).
