@@ -13,6 +13,7 @@ import kr.ac.ync.midterm.assignment.domain.Assignment;
 import kr.ac.ync.midterm.assignment.domain.AssignmentStatus;
 import kr.ac.ync.midterm.assignment.exception.AssignmentNotFoundException;
 import kr.ac.ync.midterm.assignment.repository.AssignmentRepository;
+import kr.ac.ync.midterm.attachment.service.AttachmentService;
 import kr.ac.ync.midterm.course.repository.EnrollmentRepository;
 import kr.ac.ync.midterm.global.exception.ForbiddenException;
 import kr.ac.ync.midterm.global.storage.FileStorage;
@@ -40,6 +41,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 	private final EnrollmentRepository enrollmentRepository;
 	private final UserRepository userRepository;
 	private final FileStorage fileStorage;
+	private final AttachmentService attachmentService;
 	private final Clock clock;
 
 	@Override
@@ -91,6 +93,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 				if (stored != null) {
 					submission.attachFile(stored.storedName(), stored.originalName());
 				}
+				attachmentService.addToSubmission(submission, request.getExtraFiles());
 			} else {
 				Submission submission = Submission.builder()
 						.assignment(assignment)
@@ -101,7 +104,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 				if (stored != null) {
 					submission.attachFile(stored.storedName(), stored.originalName());
 				}
-				submissionRepository.save(submission);
+				attachmentService.addToSubmission(submissionRepository.save(submission), request.getExtraFiles());
 			}
 		} catch (DataIntegrityViolationException e) {
 			// 같은 학생의 제출이 동시에 들어와 UNIQUE(assignment_id, student_id)에 걸린 경우: 한 건은 이미 저장되어 있다

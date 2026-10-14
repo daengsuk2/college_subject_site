@@ -17,9 +17,9 @@ spring:
     cache: false
   servlet:
     multipart:
-      # 업로드 최대 크기 10MB (서버에서도 FileStorage가 한 번 더 검증한다)
+      # 파일 1개당 최대 10MB, 한 요청에 첨부 5개까지(X17) (서버에서도 FileStorage가 한 번 더 검증한다)
       max-file-size: 10MB
-      max-request-size: 11MB
+      max-request-size: 51MB
 
 server:
   tomcat:

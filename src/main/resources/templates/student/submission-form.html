@@ -44,11 +44,26 @@
                     <input type="file" id="file" name="file" class="form-control-file"
                            accept=".pdf,.doc,.docx,.hwp,.hwpx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.png,.jpg,.jpeg">
                     <div class="invalid-feedback d-block" th:errors="*{file}"></div>
+                    <!-- 추가 첨부 (X17): 현재 목록과 개별 삭제 -->
+                    <ul class="small mb-1 mt-2" th:if="${resubmit and !#lists.isEmpty(attachments)}" id="attachmentList">
+                        <li th:each="a : ${attachments}">
+                            <a th:href="@{/attachments/{id}/file(id=${a.id})}" th:text="${a.originalFilename}"></a>
+                            <button type="submit" th:attr="form='deleteExtra' + ${a.id}"
+                                    class="btn btn-outline-danger btn-sm ml-2 py-0 deleteExtraButton">삭제</button>
+                        </li>
+                    </ul>
+                    <label for="extraFiles" class="mt-2">추가 첨부파일 (선택, 여러 개 선택 가능, 총 5개까지)</label>
+                    <input type="file" id="extraFiles" name="extraFiles" class="form-control-file" multiple
+                           accept=".pdf,.doc,.docx,.hwp,.hwpx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.png,.jpg,.jpeg">
                 </div>
 
                 <button type="submit" class="btn btn-primary" th:text="${resubmit} ? '다시 제출' : '제출'">제출</button>
                 <a th:href="@{/student/assignments/{id}(id=${assignment.id})}" class="btn btn-secondary">취소</a>
             </form>
+            <!-- 추가 첨부 삭제 (X17): 첨부마다 별도 폼, POST로만 동작하며 삭제 전에 확인한다 -->
+            <form th:if="${resubmit}" th:each="a : ${attachments}" th:id="'deleteExtra' + ${a.id}"
+                  th:action="@{/student/assignments/{aid}/attachments/{id}/delete(aid=${assignment.id},id=${a.id})}" method="post"
+                  onsubmit="return confirm('첨부를 삭제하시겠습니까?');"></form>
             <!-- 제출 파일 삭제 (X23): 별도 폼, POST로만 동작하며 삭제 전에 확인한다 -->
             <form th:if="${resubmit and currentFileName != null}" id="deleteSubmissionFileForm"
                   th:action="@{/student/assignments/{id}/submission/file/delete(id=${assignment.id})}" method="post"

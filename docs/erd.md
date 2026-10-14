@@ -86,6 +86,23 @@ erDiagram
 | B7 | `assignment.end_at > start_at` |
 | B8 | `submission`에 해당 assignment_id 행이 있는지 |
 
+## 추가한 테이블 (X17)
+
+제공된 ERD의 테이블 5개 외에, 여러 파일 첨부(X17)를 위해 `attachment` 테이블을 1개 추가했습니다.
+
+| 컬럼 | 설명 |
+|------|------|
+| id | PK |
+| assignment_id (nullable, FK) | 과제의 추가 첨부일 때 |
+| submission_id (nullable, FK) | 제출의 추가 첨부일 때 |
+| stored_name | 서버에 저장된 UUID 이름 |
+| original_filename | 올린 원래 파일명 |
+| created_at | 올린 시각 |
+
+- CHECK: assignment_id와 submission_id 중 정확히 하나만 값이 있음
+- 처음 올린 첨부 1개는 기존대로 `assignment.file_path` / `submission.file_path`에 있고, 그 밖의 첨부가 이 테이블에 쌓임 (과제 · 제출당 총 5개까지)
+- 관계: assignment 1 : N attachment, submission 1 : N attachment
+
 ## 추가한 컬럼
 
 제공된 ERD에 없지만 구현하면서 추가한 컬럼입니다. 이유는 README의 "추가한 컬럼과 이유"에도 기록합니다.

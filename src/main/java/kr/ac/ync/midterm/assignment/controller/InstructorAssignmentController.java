@@ -19,6 +19,7 @@ import kr.ac.ync.midterm.assignment.exception.AssignmentHasSubmissionsException;
 import kr.ac.ync.midterm.assignment.exception.AttachmentNotFoundException;
 import kr.ac.ync.midterm.assignment.exception.InvalidAssignmentPeriodException;
 import kr.ac.ync.midterm.assignment.service.AssignmentService;
+import kr.ac.ync.midterm.attachment.service.AttachmentService;
 import kr.ac.ync.midterm.course.dto.response.CourseDetailResponse;
 import kr.ac.ync.midterm.course.service.CourseService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
@@ -38,6 +39,7 @@ public class InstructorAssignmentController {
 
 	private final AssignmentService assignmentService;
 	private final CourseService courseService;
+	private final AttachmentService attachmentService;
 
 	/** 과제 등록 폼. 사이드바 링크처럼 강좌 없이 들어오면 강좌 목록으로 안내한다. */
 	@GetMapping("/new")
@@ -93,6 +95,7 @@ public class InstructorAssignmentController {
 		model.addAttribute("editing", true);
 		model.addAttribute("assignmentId", id);
 		model.addAttribute("currentFileName", assignment.originalFilename());
+		model.addAttribute("attachments", attachmentService.findByAssignment(id));
 		return FORM_VIEW;
 	}
 
@@ -120,6 +123,7 @@ public class InstructorAssignmentController {
 		model.addAttribute("editing", true);
 		model.addAttribute("assignmentId", id);
 		model.addAttribute("currentFileName", assignment.originalFilename());
+		model.addAttribute("attachments", attachmentService.findByAssignment(id));
 		return FORM_VIEW;
 	}
 

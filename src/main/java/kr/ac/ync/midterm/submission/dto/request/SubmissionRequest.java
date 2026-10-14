@@ -1,5 +1,7 @@
 package kr.ac.ync.midterm.submission.dto.request;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +23,9 @@ public class SubmissionRequest {
 
 	/** 첨부파일 (선택). 확장자 · 크기 검증은 FileStorage에서 한다. */
 	private MultipartFile file;
+
+	/** 추가 첨부파일 (선택, X17). 처음 첨부를 포함해 최대 5개. 개수 · 확장자 · 크기 검증은 서비스에서 한다. */
+	private List<MultipartFile> extraFiles;
 
 	/** 재제출 폼에 기존 내용을 채우기 위한 변환 */
 	public static SubmissionRequest from(SubmissionResponse submission) {

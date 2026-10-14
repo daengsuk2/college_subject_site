@@ -33,7 +33,13 @@
                 <dd class="col-sm-9">
                     <a th:if="${submission.hasFile()}" th:href="@{/submissions/{id}/file(id=${submission.submissionId})}"
                        th:text="${submission.originalFilename}"></a>
-                    <span th:unless="${submission.hasFile()}" class="text-gray-600">없음</span>
+                    <span th:unless="${submission.hasFile()}" class="text-gray-600"
+                          th:if="${#lists.isEmpty(attachments)}">없음</span>
+                    <ul class="mb-0 pl-3" th:if="${!#lists.isEmpty(attachments)}" id="submissionAttachmentList">
+                        <li th:each="a : ${attachments}">
+                            <a th:href="@{/attachments/{id}/file(id=${a.id})}" th:text="${a.originalFilename}"></a>
+                        </li>
+                    </ul>
                 </dd>
             </dl>
             <!-- 줄바꿈은 보존하되 HTML은 이스케이프된다 -->

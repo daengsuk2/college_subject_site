@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import kr.ac.ync.midterm.attachment.service.AttachmentService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
 import kr.ac.ync.midterm.submission.dto.request.GradeRequest;
 import kr.ac.ync.midterm.submission.dto.response.GradeFormResponse;
@@ -31,6 +32,7 @@ public class InstructorGradingController {
 	private static final String FORM_VIEW = "instructor/grade";
 
 	private final GradingService gradingService;
+	private final AttachmentService attachmentService;
 
 	@GetMapping
 	public String form(@AuthenticationPrincipal CustomUserDetails user,
@@ -38,6 +40,7 @@ public class InstructorGradingController {
 		GradeFormResponse submission = gradingService.findForGrading(user.getId(), submissionId);
 
 		model.addAttribute("submission", submission);
+		model.addAttribute("attachments", attachmentService.findBySubmission(submissionId));
 		model.addAttribute("gradeRequest", GradeRequest.from(submission));
 		return FORM_VIEW;
 	}
@@ -60,6 +63,7 @@ public class InstructorGradingController {
 		}
 
 		model.addAttribute("submission", submission);
+		model.addAttribute("attachments", attachmentService.findBySubmission(submissionId));
 		return FORM_VIEW;
 	}
 }
