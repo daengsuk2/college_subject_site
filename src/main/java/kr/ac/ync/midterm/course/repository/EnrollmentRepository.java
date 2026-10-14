@@ -24,6 +24,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 	// I4: 강좌의 수강생 수
 	long countByCourseId(Long courseId);
 
+	// S5: 학생이 수강 등록한 강좌 수
+	long countByStudentId(Long studentId);
+
 	// I6: 수강생별로 시작된 과제 중 제출한 과제 수 (1회 조회)
 	@Query("""
 			select new kr.ac.ync.midterm.stats.dto.response.StudentSubmissionCount(
