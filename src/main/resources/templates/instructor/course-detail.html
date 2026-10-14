@@ -45,7 +45,7 @@
                         <th>종료일시</th>
                         <th>배점</th>
                         <th>첨부</th>
-                        <th style="width: 140px;">관리</th>
+                        <th style="width: 230px;">관리</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,6 +60,8 @@
                             <span th:unless="${assignment.hasFile()}" class="text-gray-600">-</span>
                         </td>
                         <td>
+                            <a th:href="@{/instructor/assignments/{id}/submissions(id=${assignment.id})}"
+                               class="btn btn-info btn-sm">제출 현황</a>
                             <a th:href="@{/instructor/assignments/{id}/edit(id=${assignment.id})}"
                                class="btn btn-secondary btn-sm">수정</a>
                             <form th:action="@{/instructor/assignments/{id}/delete(id=${assignment.id})}"
