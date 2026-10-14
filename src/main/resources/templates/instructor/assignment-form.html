@@ -9,6 +9,9 @@
 <div layout:fragment="content">
     <h1 class="h3 mb-4 text-gray-800" th:text="${editing} ? '과제 수정' : '과제 등록'">과제 등록</h1>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary" th:text="${course.name}">강좌명</h6>
@@ -58,6 +61,8 @@
                         현재 첨부: <a th:href="@{/assignments/{id}/file(id=${assignmentId})}"
                                   th:text="${currentFileName}"></a>
                         (새 파일을 선택하면 교체되고, 선택하지 않으면 유지됩니다)
+                        <button type="submit" form="deleteAttachmentForm" class="btn btn-outline-danger btn-sm ml-2"
+                                id="deleteAttachmentButton">첨부 삭제</button>
                     </p>
                     <input type="file" id="file" name="file" class="form-control-file"
                            accept=".pdf,.doc,.docx,.hwp,.hwpx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.png,.jpg,.jpeg">
@@ -67,6 +72,10 @@
                 <button type="submit" class="btn btn-primary" th:text="${editing} ? '수정' : '등록'">등록</button>
                 <a th:href="@{/instructor/courses/{id}(id=${course.id})}" class="btn btn-secondary">취소</a>
             </form>
+            <!-- 첨부 삭제 (X18): 별도 폼, POST로만 동작하며 삭제 전에 확인한다 -->
+            <form th:if="${editing and currentFileName != null}" id="deleteAttachmentForm"
+                  th:action="@{/instructor/assignments/{id}/file/delete(id=${assignmentId})}" method="post"
+                  onsubmit="return confirm('첨부를 삭제하시겠습니까?');"></form>
         </div>
     </div>
 </div>

@@ -11,6 +11,7 @@ import kr.ac.ync.midterm.assignment.dto.request.AssignmentRequest;
 import kr.ac.ync.midterm.assignment.dto.response.AssignmentResponse;
 import kr.ac.ync.midterm.assignment.exception.AssignmentHasSubmissionsException;
 import kr.ac.ync.midterm.assignment.exception.AssignmentNotFoundException;
+import kr.ac.ync.midterm.assignment.exception.AttachmentNotFoundException;
 import kr.ac.ync.midterm.assignment.exception.InvalidAssignmentPeriodException;
 import kr.ac.ync.midterm.assignment.repository.AssignmentRepository;
 import kr.ac.ync.midterm.course.domain.Course;
@@ -131,6 +132,23 @@ public class AssignmentServiceImpl implements AssignmentService {
 		String storedName = assignment.getFilePath();
 		assignmentRepository.delete(assignment);
 		fileStorage.deleteQuietly(storedName);
+	}
+
+	/**
+	 * 과제 첨부 삭제 (X18). 제출이 있는 과제도 첨부는 지울 수 있다 (B8은 과제 삭제에 대한 규칙).
+	 * 서버의 파일은 DB 변경이 확정된 뒤에 지운다.
+	 */
+	@Override
+	@Transactional
+	public void removeAttachment(Long instructorId, Long assignmentId) {
+		Assignment assignment = findOwnedAssignment(instructorId, assignmentId);
+		if (!assignment.hasFile()) {
+			throw new AttachmentNotFoundException();
+		}
+
+		String storedName = assignment.getFilePath();
+		assignment.detachFile();
+		fileStorage.deleteAfterCommit(storedName);
 	}
 
 	// 없는 강좌는 404, 다른 강사의 강좌는 403 (B5)

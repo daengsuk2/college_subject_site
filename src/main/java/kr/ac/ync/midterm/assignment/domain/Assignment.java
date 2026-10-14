@@ -89,6 +89,12 @@ public class Assignment {
 		this.originalFilename = originalFilename;
 	}
 
+	/** 첨부파일 정보를 비운다 (X18). 서버의 파일 삭제는 서비스에서 DB 변경이 확정된 뒤에 한다. */
+	public void detachFile() {
+		this.filePath = null;
+		this.originalFilename = null;
+	}
+
 	public boolean hasFile() {
 		return filePath != null;
 	}
