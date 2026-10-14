@@ -37,7 +37,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered js-datatable" id="assignmentTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th>제목</th>
@@ -45,15 +45,15 @@
                         <th>종료일시</th>
                         <th>배점</th>
                         <th>첨부</th>
-                        <th style="width: 230px;">관리</th>
+                        <th class="no-sort" style="width: 230px;">관리</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="assignment : ${assignments}">
                         <td th:text="${assignment.title}"></td>
-                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${assignment.maxScore}"></td>
+                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(assignment.startAt, 'yyyyMMddHHmm')}"></td>
+                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(assignment.endAt, 'yyyyMMddHHmm')}"></td>
+                        <td th:text="${assignment.maxScore}" th:attr="data-order=${assignment.maxScore}"></td>
                         <td>
                             <a th:if="${assignment.hasFile()}" th:href="@{/assignments/{id}/file(id=${assignment.id})}"
                                th:text="${assignment.originalFilename}"></a>
@@ -87,7 +87,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered js-datatable" id="studentTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th>학번</th>
@@ -101,7 +101,7 @@
                         <td th:text="${student.studentNo}"></td>
                         <td th:text="${student.name}"></td>
                         <td th:text="${student.email}"></td>
-                        <td th:text="${#temporals.format(student.joinedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${#temporals.format(student.joinedAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(student.joinedAt, 'yyyyMMddHHmm')}"></td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(course.students)}">
                         <td colspan="4" class="text-center text-gray-600">등록된 수강생이 없습니다.</td>
@@ -114,5 +114,7 @@
 
     <a th:href="@{/instructor/courses}" class="btn btn-secondary">&larr; 강좌 목록</a>
 </div>
+<th:block layout:fragment="style"><th:block th:replace="~{fragments/datatables :: style}"></th:block></th:block>
+<th:block layout:fragment="script"><th:block th:replace="~{fragments/datatables :: script}"></th:block></th:block>
 </body>
 </html>

@@ -15,8 +15,22 @@
             <h6 class="m-0 font-weight-bold text-primary">과제 목록</h6>
         </div>
         <div class="card-body">
+            <!-- 강좌 · 상태 필터 (X16). 선택지의 강좌 목록은 표에 있는 값으로 채운다 -->
+            <div class="form-inline mb-3" th:if="${!#lists.isEmpty(assignments)}">
+                <label for="filterCourse" class="mr-2 font-weight-bold text-gray-800">강좌</label>
+                <select id="filterCourse" class="form-control form-control-sm mr-4">
+                    <option value="">전체</option>
+                </select>
+                <label for="filterStatus" class="mr-2 font-weight-bold text-gray-800">상태</label>
+                <select id="filterStatus" class="form-control form-control-sm">
+                    <option value="">전체</option>
+                    <option value="진행중">진행중</option>
+                    <option value="예정">예정</option>
+                    <option value="마감">마감</option>
+                </select>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered js-datatable" id="assignmentTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
                         <th>강좌</th>
@@ -34,10 +48,10 @@
                             <a th:href="@{/student/assignments/{id}(id=${assignment.id})}"
                                th:text="${assignment.title}"></a>
                         </td>
-                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${assignment.maxScore}"></td>
-                        <td>
+                        <td th:text="${#temporals.format(assignment.startAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(assignment.startAt, 'yyyyMMddHHmm')}"></td>
+                        <td th:text="${#temporals.format(assignment.endAt, 'yyyy-MM-dd HH:mm')}" th:attr="data-order=${#temporals.format(assignment.endAt, 'yyyyMMddHHmm')}"></td>
+                        <td th:text="${assignment.maxScore}" th:attr="data-order=${assignment.maxScore}"></td>
+                        <td th:attr="data-order=${assignment.status.sortOrder}">
                             <span class="badge" th:classappend="${assignment.status.badgeClass}"
                                   th:text="${assignment.status.label}"></span>
                         </td>
@@ -55,5 +69,39 @@
 
     <a th:href="@{/student/courses/join}" class="btn btn-secondary">수강 등록하기</a>
 </div>
+<th:block layout:fragment="style"><th:block th:replace="~{fragments/datatables :: style}"></th:block></th:block>
+<th:block layout:fragment="script">
+    <th:block th:replace="~{fragments/datatables :: script}"></th:block>
+    <script>
+        $(function () {
+            var $table = $('#assignmentTable');
+            if (!$.fn.dataTable.isDataTable($table)) {
+                return; // 과제가 없으면 표를 켜지 않았다
+            }
+            var table = $table.DataTable();
+            var escape = $.fn.dataTable.util.escapeRegex;
+
+            // 강좌 선택지: 표에 있는 강좌명 (셀의 글자를 그대로 읽는다)
+            var seen = {};
+            table.cells(null, 0).nodes().each(function (node) {
+                var name = $(node).text().trim();
+                if (name && !seen[name]) {
+                    seen[name] = true;
+                    $('#filterCourse').append($('<option>').val(name).text(name));
+                }
+            });
+
+            // 칸의 글자 앞뒤에 줄바꿈 · 공백이 있어도 일치하도록 \s*를 허용한다
+            function apply(column, value) {
+                table.column(column).search(value ? '^\\s*' + escape(value) + '\\s*$' : '', true, false);
+            }
+            $('#filterCourse, #filterStatus').on('change', function () {
+                apply(0, $('#filterCourse').val());
+                apply(5, $('#filterStatus').val());
+                table.draw();
+            });
+        });
+    </script>
+</th:block>
 </body>
 </html>

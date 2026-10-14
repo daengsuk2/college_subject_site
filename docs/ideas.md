@@ -12,16 +12,16 @@
 | X4 | 수강 등록 정정 (일정 시간 내) | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
 | X5 | 강좌 삭제 (삭제 확인, 데이터 보존) | [PR #10](https://github.com/daengsuk2/college_subject_site/pull/10) (I1) | 아이디어 |
 | X6 | 수강생 제거 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
-| X7 | 수강생 표 검색 · 정렬 (DataTables) | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2), [PR #31](https://github.com/daengsuk2/college_subject_site/pull/31) (I4) | 아이디어 |
+| X7 | 수강생 표 검색 · 정렬 (DataTables) | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2), [PR #31](https://github.com/daengsuk2/college_subject_site/pull/31) (I4) | 구현됨 |
 | X8 | 수강생 목록 내보내기 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
 | X9 | 로그인 시도 횟수 제한 (무차별 대입 방어) | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
 | X10 | 세션 고정 · 쿠키 설정(Secure, HttpOnly) 검증 | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
 | X11 | 의존 라이브러리(SB Admin 2의 jQuery 등) 취약점 점검 | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
-| X12 | 과제 목록 검색 · 정렬 | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
+| X12 | 과제 목록 검색 · 정렬 | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 구현됨 |
 | X13 | 과제 복사 (다른 강좌로 복제) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X14 | 사이드바 메뉴 정리 (강좌 관리 / 과제 관리 중복 검토) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 (S5, [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41)) |
-| X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 아이디어 |
+| X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 |
 | X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
