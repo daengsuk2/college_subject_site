@@ -142,6 +142,7 @@ src/main/resources/
 | X22 | 파일 · DB 일관성 (교체 · 삭제 · 업로드가 커밋에 실패하면 이전 파일은 보존, 새 파일은 정리, 선택 기능) | 완료 (커밋 뒤 이전 파일 삭제, 롤백 시 새 파일 삭제) |
 | X18 · X23 | 첨부 파일 삭제 (강사의 과제 첨부, 학생의 제출 파일, 선택 기능) | 완료 (DB 변경이 확정된 뒤 서버 파일 삭제, B1 · B2 · B4 · B5 적용) |
 | X8 · X32 | 표 내보내기 CSV (수강생 · 제출 현황 · 통계, 선택 기능) | 완료 (UTF-8 BOM, 엑셀 수식 주입 방지, 본인 강좌만) |
+| X17 | 여러 파일 첨부 (과제 · 제출에 최대 5개, 개별 삭제, 선택 기능) | 완료 (`attachment` 테이블 추가, 기존 첨부 1개는 그대로 유지, B1 · B2 · B4 · B5 적용, 파일은 커밋 뒤 삭제 · 롤백 시 정리) |
 | X29 | 이의 신청 (채점 후 학생이 1회 이의 신청, 강사가 답변하며 점수 재채점 가능, 선택 기능) | 완료 (B2 · B5 · B6 적용, `submission` 컬럼 4개 추가, 새 테이블 없음) |
 | X35 | 강좌별 학생 통계 (학생 대시보드에 수강 강좌별 제출률 · 평균 점수 · 마감 임박 표, 선택 기능) | 완료 (강좌별 합 = 전체 값, DB 변경 없음) |
 | X31 | 과제별 추이 차트 (강사 통계에 과제 순서대로 제출률 · 평균 점수 비율 선 차트, 선택 기능) | 완료 (시간 간격이 아닌 과제 순서 기준, 평균이 없으면 선이 끊김, DB 변경 없음) |
@@ -166,7 +167,7 @@ src/main/resources/
 | S4 | 결과 확인 (점수 · 피드백) | 완료 |
 | S5 | 내 통계 | 완료 |
 
-## DB 설계 (테이블 5개)
+## DB 설계 (테이블 5개 + X17 추가 테이블 1개)
 
 | 테이블 | 주요 컬럼 |
 |--------|-----------|
@@ -176,8 +177,15 @@ src/main/resources/
 | assignment | id, course_id(FK), title, content, start_at, end_at, max_score, file_path(nullable), created_at |
 | submission | id, assignment_id(FK), student_id(FK users), content, file_path(nullable), submitted_at, status(SUBMITTED/GRADED), score, feedback, graded_at — UNIQUE(assignment_id, student_id) |
 
+과제당 · 제출당 첨부를 여러 개 받는 선택 기능(X17)을 위해 `attachment` 테이블을 1개 추가했습니다. 제공된 ERD의 테이블 5개는 그대로이며 아래 "추가한 테이블과 이유"에 적었습니다.
+
 관계: users(강사) 1:N course, course 1:N assignment, course N:M users(학생)은 enrollment로 연결,
 assignment 1:N submission, users(학생) 1:N submission.
+
+### 추가한 테이블과 이유
+| 테이블 | 이유 | 추가한 기능 |
+|--------|------|-------------|
+| attachment (id, assignment_id 또는 submission_id 중 하나, stored_name, original_filename, created_at) | 과제 · 제출에 파일을 여러 개 붙이려면 파일마다 한 행이 필요해 컬럼 하나로는 담을 수 없어서. 처음 올린 첨부 1개는 기존 `file_path`에 그대로 두고 추가 첨부만 이 테이블에 쌓아 기존 기능(교체 · 삭제 · 다운로드)을 건드리지 않음. 과제 쪽과 제출 쪽 중 하나에만 연결되도록 CHECK 제약 | X17 여러 파일 첨부 |
 
 ### 추가한 컬럼과 이유
 | 테이블.컬럼 | 이유 | 추가한 기능 |

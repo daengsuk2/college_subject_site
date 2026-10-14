@@ -1,5 +1,7 @@
 package kr.ac.ync.midterm.submission.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import jakarta.validation.Valid;
 import kr.ac.ync.midterm.assignment.domain.AssignmentStatus;
 import kr.ac.ync.midterm.assignment.dto.response.StudentAssignmentResponse;
 import kr.ac.ync.midterm.assignment.service.StudentAssignmentService;
+import kr.ac.ync.midterm.attachment.service.AttachmentService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
 import kr.ac.ync.midterm.global.storage.InvalidFileException;
 import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
@@ -38,6 +41,7 @@ public class StudentSubmissionController {
 
 	private final SubmissionService submissionService;
 	private final StudentAssignmentService studentAssignmentService;
+	private final AttachmentService attachmentService;
 
 	@GetMapping
 	public String form(@AuthenticationPrincipal CustomUserDetails user,
@@ -58,6 +62,8 @@ public class StudentSubmissionController {
 		model.addAttribute("resubmit", submission != null);
 		model.addAttribute("submissionId", submission != null ? submission.id() : null);
 		model.addAttribute("currentFileName", submission != null ? submission.originalFilename() : null);
+		model.addAttribute("attachments",
+				submission != null ? attachmentService.findBySubmission(submission.id()) : List.of());
 		model.addAttribute("submissionRequest",
 				submission != null ? SubmissionRequest.from(submission) : new SubmissionRequest());
 		return FORM_VIEW;
@@ -89,6 +95,8 @@ public class StudentSubmissionController {
 		model.addAttribute("resubmit", resubmit);
 		model.addAttribute("submissionId", current != null ? current.id() : null);
 		model.addAttribute("currentFileName", current != null ? current.originalFilename() : null);
+		model.addAttribute("attachments",
+				current != null ? attachmentService.findBySubmission(current.id()) : List.of());
 		return FORM_VIEW;
 	}
 }

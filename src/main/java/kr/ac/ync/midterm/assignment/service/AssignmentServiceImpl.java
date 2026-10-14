@@ -14,6 +14,7 @@ import kr.ac.ync.midterm.assignment.exception.AssignmentNotFoundException;
 import kr.ac.ync.midterm.assignment.exception.AttachmentNotFoundException;
 import kr.ac.ync.midterm.assignment.exception.InvalidAssignmentPeriodException;
 import kr.ac.ync.midterm.assignment.repository.AssignmentRepository;
+import kr.ac.ync.midterm.attachment.service.AttachmentService;
 import kr.ac.ync.midterm.course.domain.Course;
 import kr.ac.ync.midterm.course.exception.CourseNotFoundException;
 import kr.ac.ync.midterm.course.repository.CourseRepository;
@@ -32,6 +33,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 	private final CourseRepository courseRepository;
 	private final SubmissionRepository submissionRepository;
 	private final FileStorage fileStorage;
+	private final AttachmentService attachmentService;
 
 	/**
 	 * 과제 등록 (I3). 본인 강좌에만 등록할 수 있다 (B5), 종료일시는 시작일시보다 뒤여야 한다 (B7).
@@ -58,7 +60,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 			if (stored != null) {
 				assignment.attachFile(stored.storedName(), stored.originalName());
 			}
-			return AssignmentResponse.from(assignmentRepository.save(assignment));
+			Assignment saved = assignmentRepository.save(assignment);
+			attachmentService.addToAssignment(saved, request.getExtraFiles());
+			return AssignmentResponse.from(saved);
 		} catch (RuntimeException e) {
 			// 저장에 실패하면 방금 올린 파일이 남지 않게 지운다
 			if (stored != null) {
@@ -107,6 +111,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 			if (stored != null) {
 				assignment.attachFile(stored.storedName(), stored.originalName());
 			}
+			attachmentService.addToAssignment(assignment, request.getExtraFiles());
 		} catch (RuntimeException e) {
 			if (stored != null) {
 				fileStorage.deleteQuietly(stored.storedName());
@@ -134,6 +139,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		}
 
 		String storedName = assignment.getFilePath();
+		attachmentService.removeAllOfAssignment(assignmentId);
 		assignmentRepository.delete(assignment);
 		// DB 삭제가 확정된 뒤에 파일을 지운다. 커밋이 실패하면 과제와 파일이 모두 남는다 (X22)
 		fileStorage.deleteAfterCommit(storedName);

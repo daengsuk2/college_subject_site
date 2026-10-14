@@ -22,7 +22,7 @@
 | X14 | 사이드바 메뉴 정리 (강좌 관리 / 과제 관리 중복 검토) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 (S5, [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41)) |
 | X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 |
-| X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
+| X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 구현됨 |
 | X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 구현됨 |
 | X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X20 | 바이러스 검사 · 이미지 미리보기 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
@@ -161,12 +161,13 @@
 - 고려할 점
   - 제출 · 점수 보기(W3~)가 생기면 필터 항목에 제출 여부를 더할 수 있다.
 
-## X17. 여러 파일 첨부
+## X17. 여러 파일 첨부 (구현됨)
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 여러 파일
 - 추가 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) — 제출 파일도 여러 개 첨부할 수 있게 한다. 이때도 별도 첨부 테이블이 필요하다.
 - 과제 하나에 파일을 여러 개 첨부할 수 있게 한다.
 - 고려할 점
   - 지금은 `assignment`에 파일 컬럼이 하나라 별도 첨부 테이블이 필요하다 (테이블 5개 제한을 강사님께 확인).
+  - 구현: `attachment` 테이블을 1개 추가했다. 처음 올린 첨부 1개는 기존 컬럼에 두고 추가 첨부만 이 테이블에 쌓는다(과제 · 제출당 총 5개). 강사님 확인 전에 진행했으므로 답변에 따라 방식을 바꿀 수 있다.
 
 ## X18. 첨부 삭제 버튼 (현재는 교체만 가능) (구현됨)
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 첨부 삭제

@@ -1,6 +1,7 @@
 package kr.ac.ync.midterm.assignment.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +43,9 @@ public class AssignmentRequest {
 
 	/** 첨부파일 (선택). 확장자 · 크기 검증은 FileStorage에서 한다. */
 	private MultipartFile file;
+
+	/** 추가 첨부파일 (선택, X17). 처음 첨부를 포함해 최대 5개. 개수 · 확장자 · 크기 검증은 서비스에서 한다. */
+	private List<MultipartFile> extraFiles;
 
 	/** 수정 폼에 기존 값을 채우기 위한 변환 */
 	public static AssignmentRequest from(AssignmentResponse assignment) {

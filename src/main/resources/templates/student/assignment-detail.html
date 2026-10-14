@@ -34,7 +34,13 @@
                 <dd class="col-sm-9">
                     <a th:if="${assignment.hasFile()}" th:href="@{/assignments/{id}/file(id=${assignment.id})}"
                        th:text="${assignment.originalFilename}"></a>
-                    <span th:unless="${assignment.hasFile()}" class="text-gray-600">없음</span>
+                    <span th:unless="${assignment.hasFile()}" class="text-gray-600"
+                          th:if="${#lists.isEmpty(assignmentAttachments)}">없음</span>
+                    <ul class="mb-0 pl-3" th:if="${!#lists.isEmpty(assignmentAttachments)}" id="assignmentAttachmentList">
+                        <li th:each="a : ${assignmentAttachments}">
+                            <a th:href="@{/attachments/{id}/file(id=${a.id})}" th:text="${a.originalFilename}"></a>
+                        </li>
+                    </ul>
                 </dd>
             </dl>
         </div>
@@ -68,6 +74,12 @@
                     첨부파일: <a th:href="@{/submissions/{id}/file(id=${submission.id})}"
                               th:text="${submission.originalFilename}"></a>
                 </p>
+
+                <ul class="mb-3" th:if="${!#lists.isEmpty(submissionAttachments)}" id="submissionAttachmentList">
+                    <li th:each="a : ${submissionAttachments}">
+                        첨부파일: <a th:href="@{/attachments/{id}/file(id=${a.id})}" th:text="${a.originalFilename}"></a>
+                    </li>
+                </ul>
 
                 <!-- 채점 결과 (S4): 채점 후에만 점수와 피드백이 보인다 -->
                 <div th:if="${submission.graded}" class="border-left-primary pl-3 mb-3" id="gradeResult">
