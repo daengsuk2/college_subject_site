@@ -4,17 +4,24 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.ac.ync.midterm.assignment.domain.Assignment;
 import kr.ac.ync.midterm.assignment.repository.AssignmentRepository;
+import kr.ac.ync.midterm.course.dto.response.MyCourseResponse;
 import kr.ac.ync.midterm.course.repository.CourseRepository;
 import kr.ac.ync.midterm.course.repository.EnrollmentRepository;
 import kr.ac.ync.midterm.dashboard.dto.response.InstructorDashboardResponse;
 import kr.ac.ync.midterm.dashboard.dto.response.InstructorDashboardResponse.RecentSubmissionRow;
+import kr.ac.ync.midterm.dashboard.dto.response.StudentCourseAggregate;
 import kr.ac.ync.midterm.dashboard.dto.response.StudentDashboardResponse;
+import kr.ac.ync.midterm.dashboard.dto.response.StudentDashboardResponse.CourseStatRow;
 import kr.ac.ync.midterm.dashboard.dto.response.StudentDashboardResponse.DueSoonRow;
 import kr.ac.ync.midterm.dashboard.dto.response.StudentSubmissionAggregate;
 import kr.ac.ync.midterm.submission.repository.SubmissionRepository;
@@ -54,14 +61,34 @@ public class DashboardServiceImpl implements DashboardService {
 				? null
 				: aggregate.scoreSum() * 100.0 / aggregate.maxScoreSum();
 
-		List<DueSoonRow> dueSoon = assignmentRepository
-				.findDueSoon(studentId, now, now.plus(DUE_SOON_WINDOW)).stream()
+		List<Assignment> dueSoonAssignments = assignmentRepository
+				.findDueSoon(studentId, now, now.plus(DUE_SOON_WINDOW));
+		List<DueSoonRow> dueSoon = dueSoonAssignments.stream()
 				.map(a -> new DueSoonRow(a.getId(), a.getTitle(), a.getCourse().getName(), a.getEndAt(),
 						Duration.between(now, a.getEndAt()).toMinutes()))
 				.toList();
 
+		// 강좌별 통계 (X35): 수강 강좌 목록(시작된 과제 수 · 제출 수 포함)에 채점 집계와 마감 임박 수를 붙인다
+		Map<Long, StudentCourseAggregate> byCourse = submissionRepository.aggregateForStudentByCourse(studentId, now)
+				.stream().collect(Collectors.toMap(StudentCourseAggregate::courseId, Function.identity()));
+		Map<Long, Long> dueSoonByCourse = dueSoonAssignments.stream()
+				.collect(Collectors.groupingBy(a -> a.getCourse().getId(), Collectors.counting()));
+		List<CourseStatRow> courses = enrollmentRepository.findMyCourses(studentId, now).stream()
+				.map(c -> toCourseStat(c, byCourse.get(c.courseId()), dueSoonByCourse.getOrDefault(c.courseId(), 0L)))
+				.toList();
+
 		return new StudentDashboardResponse(courseCount, started, aggregate.submittedCount(), graded, averageScore,
-				averageRate, dueSoon);
+				averageRate, dueSoon, courses);
+	}
+
+	private CourseStatRow toCourseStat(MyCourseResponse course, StudentCourseAggregate agg, long dueSoonCount) {
+		long graded = agg == null ? 0 : agg.gradedCount();
+		Double averageScore = graded == 0 ? null : agg.scoreSum() / (double) graded;
+		Double averageRate = graded == 0 || agg.maxScoreSum() == null || agg.maxScoreSum() == 0
+				? null
+				: agg.scoreSum() * 100.0 / agg.maxScoreSum();
+		return new CourseStatRow(course.courseId(), course.courseName(), course.startedAssignmentCount(),
+				course.submittedCount(), graded, averageScore, averageRate, dueSoonCount);
 	}
 
 	/**

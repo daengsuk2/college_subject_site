@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import kr.ac.ync.midterm.dashboard.dto.response.StudentCourseAggregate;
 import kr.ac.ync.midterm.dashboard.dto.response.StudentSubmissionAggregate;
 import kr.ac.ync.midterm.stats.dto.response.AssignmentSubmissionAggregate;
 import kr.ac.ync.midterm.submission.domain.Submission;
@@ -62,6 +63,24 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 			              where e.course.id = s.assignment.course.id and e.student.id = :studentId)
 			""")
 	StudentSubmissionAggregate aggregateForStudent(@Param("studentId") Long studentId,
+			@Param("now") LocalDateTime now);
+
+	// X35: 학생의 강좌별 제출 집계 (S5의 전체 집계를 수강 강좌별로 묶은 것, group by 1회)
+	@Query("""
+			select new kr.ac.ync.midterm.dashboard.dto.response.StudentCourseAggregate(
+				s.assignment.course.id,
+				count(s),
+				count(case when s.status = kr.ac.ync.midterm.submission.domain.SubmissionStatus.GRADED then 1 end),
+				sum(case when s.status = kr.ac.ync.midterm.submission.domain.SubmissionStatus.GRADED then s.score end),
+				sum(case when s.status = kr.ac.ync.midterm.submission.domain.SubmissionStatus.GRADED then s.assignment.maxScore end))
+			from Submission s
+			where s.student.id = :studentId
+			  and s.assignment.startAt <= :now
+			  and exists (select e.id from Enrollment e
+			              where e.course.id = s.assignment.course.id and e.student.id = :studentId)
+			group by s.assignment.course.id
+			""")
+	List<StudentCourseAggregate> aggregateForStudentByCourse(@Param("studentId") Long studentId,
 			@Param("now") LocalDateTime now);
 
 	// 강사 대시보드: 내 강좌에서 채점 대기 중인 제출 수 (수강생의 제출만)
