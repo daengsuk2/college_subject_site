@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import kr.ac.ync.midterm.assignment.service.StudentAssignmentService;
 import kr.ac.ync.midterm.global.security.CustomUserDetails;
+import kr.ac.ync.midterm.submission.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentAssignmentController {
 
 	private final StudentAssignmentService studentAssignmentService;
+	private final SubmissionService submissionService;
 
 	@GetMapping
 	public String list(@AuthenticationPrincipal CustomUserDetails user, Model model) {
@@ -32,6 +34,7 @@ public class StudentAssignmentController {
 	public String detail(@AuthenticationPrincipal CustomUserDetails user,
 			@PathVariable Long id, Model model) {
 		model.addAttribute("assignment", studentAssignmentService.findMyAssignment(user.getId(), id));
+		model.addAttribute("submission", submissionService.findMySubmission(user.getId(), id).orElse(null));
 		return "student/assignment-detail";
 	}
 }

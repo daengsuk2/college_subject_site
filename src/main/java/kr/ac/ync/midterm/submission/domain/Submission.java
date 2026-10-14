@@ -63,11 +63,23 @@ public class Submission {
 	private LocalDateTime gradedAt;
 
 	@Builder
-	private Submission(Assignment assignment, User student, String content, String filePath) {
+	private Submission(Assignment assignment, User student, String content, String filePath,
+			LocalDateTime submittedAt) {
 		this.assignment = assignment;
 		this.student = student;
 		this.content = content;
 		this.filePath = filePath;
+		this.submittedAt = submittedAt;
+	}
+
+	/** 재제출(B3): 같은 제출을 덮어쓴다. 채점 완료 여부(B4)는 서비스에서 먼저 검사한다. */
+	public void resubmit(String content, LocalDateTime submittedAt) {
+		this.content = content;
+		this.submittedAt = submittedAt;
+	}
+
+	public boolean isGraded() {
+		return this.status == SubmissionStatus.GRADED;
 	}
 
 	@PrePersist
