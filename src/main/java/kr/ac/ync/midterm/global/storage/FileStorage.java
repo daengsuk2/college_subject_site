@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -101,6 +103,26 @@ public class FileStorage {
 			Files.deleteIfExists(resolveInsideRoot(storedName));
 		} catch (IOException | InvalidFileException e) {
 			// 파일 정리 실패가 업무 처리를 막지 않도록 무시한다
+		}
+	}
+
+	/**
+	 * DB 변경이 확정(커밋)된 뒤에 파일을 삭제한다. DB 처리가 실패해 롤백되면 파일은 지워지지 않는다.
+	 * (파일을 먼저 지웠는데 DB 저장이 실패하면 되돌릴 수 없기 때문이다.) 트랜잭션 밖에서 부르면 바로 삭제한다.
+	 */
+	public void deleteAfterCommit(String storedName) {
+		if (storedName == null) {
+			return;
+		}
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+				@Override
+				public void afterCommit() {
+					deleteQuietly(storedName);
+				}
+			});
+		} else {
+			deleteQuietly(storedName);
 		}
 	}
 

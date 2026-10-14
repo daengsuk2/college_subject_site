@@ -23,12 +23,12 @@
 | X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 (S5, [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41)) |
 | X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 |
 | X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
-| X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
+| X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 구현됨 |
 | X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X20 | 바이러스 검사 · 이미지 미리보기 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X21 | 업로드 진행률 표시 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X22 | DB 커밋 실패 시 삭제한 파일 복구 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
-| X23 | 제출 파일 삭제 버튼 (현재는 교체만 가능) | [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
+| X23 | 제출 파일 삭제 버튼 (현재는 교체만 가능) | [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 구현됨 |
 | X24 | 일괄 채점 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
 | X25 | 채점 취소 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
 | X26 | 피드백 템플릿 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
@@ -168,7 +168,7 @@
 - 고려할 점
   - 지금은 `assignment`에 파일 컬럼이 하나라 별도 첨부 테이블이 필요하다 (테이블 5개 제한을 강사님께 확인).
 
-## X18. 첨부 삭제 버튼 (현재는 교체만 가능)
+## X18. 첨부 삭제 버튼 (현재는 교체만 가능) (구현됨)
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 첨부 삭제
 - 지금은 새 파일로 교체만 가능하고 파일 없이 되돌리는 방법이 없다. 삭제 버튼을 추가한다.
 - 고려할 점
@@ -200,7 +200,7 @@
 - 고려할 점
   - 삭제를 커밋 이후로 미루는 방식(트랜잭션 후처리)을 검토한다.
 
-## X23. 제출 파일 삭제 버튼 (현재는 교체만 가능)
+## X23. 제출 파일 삭제 버튼 (현재는 교체만 가능) (구현됨)
 - 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) S3-b 개선점 — 제출 파일 삭제
 - 학생이 제출한 파일을 지우는 버튼을 추가한다. 지금은 새 파일로 교체만 가능하고, 파일 없이 되돌리는 방법이 없다.
 - 고려할 점

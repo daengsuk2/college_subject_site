@@ -23,6 +23,8 @@ import kr.ac.ync.midterm.submission.dto.response.MySubmissionResponse;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
 import kr.ac.ync.midterm.submission.exception.AlreadyGradedException;
 import kr.ac.ync.midterm.submission.exception.AlreadySubmittedException;
+import kr.ac.ync.midterm.submission.exception.SubmissionFileNotFoundException;
+import kr.ac.ync.midterm.submission.exception.SubmissionNotFoundException;
 import kr.ac.ync.midterm.submission.exception.SubmissionPeriodException;
 import kr.ac.ync.midterm.submission.repository.SubmissionRepository;
 import kr.ac.ync.midterm.user.repository.UserRepository;
@@ -117,6 +119,34 @@ public class SubmissionServiceImpl implements SubmissionService {
 		if (stored != null) {
 			fileStorage.deleteQuietly(oldStoredName);
 		}
+	}
+
+	/**
+	 * 제출 파일 삭제 (X23). 순서: 과제 존재(404) → 수강 등록(B2, 403) → 제출 기간(B1) → 내 제출 → 채점 완료(B4) → 첨부 여부.
+	 * 서버의 파일은 DB 변경이 확정된 뒤에 지운다.
+	 */
+	@Override
+	@Transactional
+	public void removeFile(Long studentId, Long assignmentId) {
+		Assignment assignment = findEnrolledAssignment(studentId, assignmentId);
+		LocalDateTime now = LocalDateTime.now(clock);
+
+		if (AssignmentStatus.of(assignment.getStartAt(), assignment.getEndAt(), now) != AssignmentStatus.IN_PROGRESS) {
+			throw new SubmissionPeriodException();
+		}
+
+		Submission submission = submissionRepository.findByAssignmentIdAndStudentId(assignmentId, studentId)
+				.orElseThrow(SubmissionNotFoundException::new);
+		if (submission.isGraded()) {
+			throw new AlreadyGradedException();
+		}
+		if (!submission.hasFile()) {
+			throw new SubmissionFileNotFoundException();
+		}
+
+		String storedName = submission.getFilePath();
+		submission.detachFile();
+		fileStorage.deleteAfterCommit(storedName);
 	}
 
 	private Assignment findEnrolledAssignment(Long studentId, Long assignmentId) {

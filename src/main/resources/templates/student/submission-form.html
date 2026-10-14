@@ -9,6 +9,9 @@
 <div layout:fragment="content">
     <h1 class="h3 mb-4 text-gray-800" th:text="${resubmit} ? '다시 제출' : '과제 제출'">과제 제출</h1>
 
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
@@ -35,6 +38,8 @@
                         현재 첨부: <a th:href="@{/submissions/{id}/file(id=${submissionId})}"
                                   th:text="${currentFileName}"></a>
                         (새 파일을 선택하면 교체되고, 선택하지 않으면 유지됩니다)
+                        <button type="submit" form="deleteSubmissionFileForm" class="btn btn-outline-danger btn-sm ml-2"
+                                id="deleteSubmissionFileButton">첨부 삭제</button>
                     </p>
                     <input type="file" id="file" name="file" class="form-control-file"
                            accept=".pdf,.doc,.docx,.hwp,.hwpx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.png,.jpg,.jpeg">
@@ -44,6 +49,10 @@
                 <button type="submit" class="btn btn-primary" th:text="${resubmit} ? '다시 제출' : '제출'">제출</button>
                 <a th:href="@{/student/assignments/{id}(id=${assignment.id})}" class="btn btn-secondary">취소</a>
             </form>
+            <!-- 제출 파일 삭제 (X23): 별도 폼, POST로만 동작하며 삭제 전에 확인한다 -->
+            <form th:if="${resubmit and currentFileName != null}" id="deleteSubmissionFileForm"
+                  th:action="@{/student/assignments/{id}/submission/file/delete(id=${assignment.id})}" method="post"
+                  onsubmit="return confirm('첨부를 삭제하시겠습니까?');"></form>
         </div>
     </div>
 </div>

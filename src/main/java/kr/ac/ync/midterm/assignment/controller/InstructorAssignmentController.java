@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import kr.ac.ync.midterm.assignment.dto.request.AssignmentRequest;
 import kr.ac.ync.midterm.assignment.dto.response.AssignmentResponse;
 import kr.ac.ync.midterm.assignment.exception.AssignmentHasSubmissionsException;
+import kr.ac.ync.midterm.assignment.exception.AttachmentNotFoundException;
 import kr.ac.ync.midterm.assignment.exception.InvalidAssignmentPeriodException;
 import kr.ac.ync.midterm.assignment.service.AssignmentService;
 import kr.ac.ync.midterm.course.dto.response.CourseDetailResponse;
@@ -120,6 +121,19 @@ public class InstructorAssignmentController {
 		model.addAttribute("assignmentId", id);
 		model.addAttribute("currentFileName", assignment.originalFilename());
 		return FORM_VIEW;
+	}
+
+	/** 과제 첨부 삭제 (X18). 삭제 후 같은 과제의 수정 화면으로 돌아간다. */
+	@PostMapping("/{id}/file/delete")
+	public String removeAttachment(@AuthenticationPrincipal CustomUserDetails user,
+			@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		try {
+			assignmentService.removeAttachment(user.getId(), id);
+			redirectAttributes.addFlashAttribute("message", "첨부를 삭제했습니다.");
+		} catch (AttachmentNotFoundException e) {
+			redirectAttributes.addFlashAttribute("error", "삭제할 첨부가 없습니다.");
+		}
+		return "redirect:/instructor/assignments/" + id + "/edit";
 	}
 
 	@PostMapping("/{id}/delete")
