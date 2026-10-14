@@ -14,6 +14,7 @@ import kr.ac.ync.midterm.global.security.CustomUserDetails;
 import kr.ac.ync.midterm.stats.dto.response.CourseStatsResponse;
 import kr.ac.ync.midterm.stats.dto.response.CourseStatsResponse.AssignmentStatRow;
 import kr.ac.ync.midterm.stats.dto.response.StatsPageResponse;
+import kr.ac.ync.midterm.stats.dto.response.TrendChartData;
 import kr.ac.ync.midterm.stats.service.StatsService;
 import lombok.RequiredArgsConstructor;
 
@@ -49,6 +50,8 @@ public class InstructorStatsController {
 			model.addAttribute("chartLabels", labels);
 			model.addAttribute("chartAverages", averages);
 			model.addAttribute("chartMaxScores", maxScores);
+			// 과제별 추이 선 차트 (X31): 과제 순서(시작일시 순)에 따른 제출률 · 평균 점수 비율, 서버가 계산한 값
+			model.addAttribute("trend", TrendChartData.from(stats));
 			model.addAttribute("chartSubmitted", stats.submittedCount());
 			model.addAttribute("chartNotSubmitted", stats.notSubmittedCount());
 		}
