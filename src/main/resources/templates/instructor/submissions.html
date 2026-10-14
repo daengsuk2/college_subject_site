@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>제출 현황</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-1 text-gray-800">제출 현황</h1>
+    <p class="text-gray-600 mb-4">
+        <span th:text="${status.courseName}">강좌명</span> · <span th:text="${status.assignmentTitle}">과제명</span>
+    </p>
+
+    <!-- 요약 -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-2">
+            <div class="card border-left-primary shadow py-2">
+                <div class="card-body py-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">수강생</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="enrolledCount"
+                         th:text="${status.enrolledCount} + '명'">0명</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="card border-left-success shadow py-2">
+                <div class="card-body py-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">제출</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="submittedCount"
+                         th:text="${status.submittedCount} + '명'">0명</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="card border-left-warning shadow py-2">
+                <div class="card-body py-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">미제출</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="notSubmittedCount"
+                         th:text="${status.notSubmittedCount} + '명'">0명</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 제출자 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">제출한 학생</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" th:if="${status.submittedCount > 0}">
+                <table class="table table-bordered" width="100%" cellspacing="0" id="submittedTable">
+                    <thead>
+                    <tr>
+                        <th>학번</th>
+                        <th>이름</th>
+                        <th>제출 시각</th>
+                        <th>상태</th>
+                        <th>점수</th>
+                        <th>첨부파일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${status.submitted}">
+                        <td th:text="${row.studentNo}"></td>
+                        <td th:text="${row.studentName}"></td>
+                        <td th:text="${#temporals.format(row.submittedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${row.graded} ? 'badge-primary' : 'badge-success'"
+                                  th:text="${row.graded} ? '채점 완료' : '제출함'"></span>
+                        </td>
+                        <td>
+                            <span th:if="${row.graded}" th:text="${row.score} + ' / ' + ${status.maxScore}"></span>
+                            <span th:unless="${row.graded}" class="text-gray-600">-</span>
+                        </td>
+                        <td>
+                            <a th:if="${row.hasFile()}" th:href="@{/submissions/{id}/file(id=${row.submissionId})}"
+                               th:text="${row.originalFilename}"></a>
+                            <span th:unless="${row.hasFile()}" class="text-gray-600">없음</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-600 mb-0" th:if="${status.submittedCount == 0}">아직 제출한 학생이 없습니다.</p>
+        </div>
+    </div>
+
+    <!-- 미제출자 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-warning">제출하지 않은 학생</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" th:if="${status.notSubmittedCount > 0}">
+                <table class="table table-bordered" width="100%" cellspacing="0" id="notSubmittedTable">
+                    <thead>
+                    <tr>
+                        <th>학번</th>
+                        <th>이름</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${status.notSubmitted}">
+                        <td th:text="${row.studentNo}"></td>
+                        <td th:text="${row.studentName}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-600 mb-0" th:if="${status.notSubmittedCount == 0 and status.enrolledCount > 0}">
+                모든 수강생이 제출했습니다.</p>
+            <p class="text-gray-600 mb-0" th:if="${status.enrolledCount == 0}">수강생이 없습니다.</p>
+        </div>
+    </div>
+
+    <a th:href="@{/instructor/courses/{id}(id=${status.courseId})}" class="btn btn-secondary">&larr; 강좌 상세</a>
+</div>
+</body>
+</html>
