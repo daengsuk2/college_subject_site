@@ -27,6 +27,13 @@
             <noscript><button type="submit" class="btn btn-primary">보기</button></noscript>
         </form>
 
+        <div class="mb-4">
+            <a th:href="@{/instructor/stats/assignments.csv(courseId=${stats.courseId})}"
+               class="btn btn-outline-primary btn-sm mr-2" id="assignmentsCsv">과제별 현황 CSV</a>
+            <a th:href="@{/instructor/stats/missing.csv(courseId=${stats.courseId})}"
+               class="btn btn-outline-primary btn-sm" id="missingCsv">미제출 학생 CSV</a>
+        </div>
+
         <!-- 요약 -->
         <div class="row mb-4">
             <div class="col-md-3 mb-2">

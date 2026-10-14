@@ -14,6 +14,11 @@
 
     <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
 
+    <div class="mb-3">
+        <a th:href="@{/instructor/assignments/{id}/submissions.csv(id=${status.assignmentId})}"
+           class="btn btn-outline-primary btn-sm" id="submissionsCsv">CSV 내려받기 (제출 + 미제출)</a>
+    </div>
+
     <!-- 요약 -->
     <div class="row mb-4">
         <div class="col-md-4 mb-2">

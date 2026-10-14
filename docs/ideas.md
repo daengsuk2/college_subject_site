@@ -13,7 +13,7 @@
 | X5 | 강좌 삭제 (삭제 확인, 데이터 보존) | [PR #10](https://github.com/daengsuk2/college_subject_site/pull/10) (I1) | 아이디어 |
 | X6 | 수강생 제거 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
 | X7 | 수강생 표 검색 · 정렬 (DataTables) | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2), [PR #31](https://github.com/daengsuk2/college_subject_site/pull/31) (I4) | 구현됨 |
-| X8 | 수강생 목록 내보내기 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
+| X8 | 수강생 목록 내보내기 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 구현됨 |
 | X9 | 로그인 시도 횟수 제한 (무차별 대입 방어) | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
 | X10 | 세션 고정 · 쿠키 설정(Secure, HttpOnly) 검증 | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
 | X11 | 의존 라이브러리(SB Admin 2의 jQuery 등) 취약점 점검 | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
@@ -37,7 +37,7 @@
 | X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 구현됨 |
 | X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
-| X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
+| X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 구현됨 |
 | X33 | 여러 강좌 비교 | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
 | X34 | 마감 임박 알림 · 기준 시간 설정 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
 | X35 | 강좌별 학생 통계 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
@@ -101,7 +101,7 @@
   - SB Admin 2에 포함된 DataTables를 쓰면 서버 변경 없이 가능하다.
   - 정렬 기본값(등록 순서)은 유지한다.
 
-## X8. 수강생 목록 내보내기
+## X8. 수강생 목록 내보내기 (구현됨)
 - 출처: [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) I2 개선점 — 목록 내보내기
 - 수강생 목록을 CSV 등으로 내려받게 한다.
 - 고려할 점
@@ -263,7 +263,7 @@
   - 과제의 시작일시나 채점 시각(`graded_at`)을 기준으로 묶을 수 있어 컬럼 추가는 필요 없다.
   - 강사용(강좌 기준)과 학생용(내 기준)을 따로 만들지 정해야 한다.
 
-## X32. 통계 내보내기 (엑셀 · CSV)
+## X32. 통계 내보내기 (엑셀 · CSV) (구현됨)
 - 출처: [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) I6 개선점 — 내보내기
 - 통계 화면의 과제별 표와 미제출자 표를 파일로 내려받는다.
 - 고려할 점

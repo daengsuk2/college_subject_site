@@ -140,6 +140,7 @@ src/main/resources/
 | X1 | 마이페이지 (이름 · 비밀번호 변경, 선택 기능) | 완료 (`/mypage`, DB 변경 없음) |
 | X3 | 내 수강 강좌 보기 (강좌 · 담당 강사 · 등록일 · 시작된 과제 수 · 제출한 과제 수, 선택 기능) | 완료 (`/student/courses`, DB 변경 없음) |
 | X18 · X23 | 첨부 파일 삭제 (강사의 과제 첨부, 학생의 제출 파일, 선택 기능) | 완료 (DB 변경이 확정된 뒤 서버 파일 삭제, B1 · B2 · B4 · B5 적용) |
+| X8 · X32 | 표 내보내기 CSV (수강생 · 제출 현황 · 통계, 선택 기능) | 완료 (UTF-8 BOM, 엑셀 수식 주입 방지, 본인 강좌만) |
 | X7 · X12 · X16 | 표 검색 · 정렬 (수강생 · 과제 · 강좌 · 제출 현황 · 내 과제 · 내 제출, 내 과제는 강좌 · 상태 필터, 선택 기능) | 완료 (DataTables, 브라우저에서만 처리) |
 
 ### 강사
@@ -209,6 +210,7 @@ assignment 1:N submission, users(학생) 1:N submission.
 | 강사 | `/instructor/assignments/{id}/submissions` | 제출 현황 + 미제출자 |
 | 강사 | `/instructor/submissions/{id}/grade` | 채점 · 피드백 |
 | 강사 | `/instructor/stats` | 통계 대시보드 |
+| 강사 | `/instructor/courses/{id}/students.csv` · `/instructor/assignments/{id}/submissions.csv` · `/instructor/stats/assignments.csv` · `/instructor/stats/missing.csv` | CSV 내려받기 |
 | 학생 | `/student/courses` | 내 수강 강좌 (수강 등록 후 이동) |
 | 학생 | `/student/courses/join` | 참여코드 입력 |
 | 학생 | `/student/assignments` · `/{id}` | 내 과제 목록 · 상세 + 제출 |
