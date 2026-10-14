@@ -20,7 +20,7 @@
 | X12 | 과제 목록 검색 · 정렬 | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X13 | 과제 복사 (다른 강좌로 복제) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X14 | 사이드바 메뉴 정리 (강좌 관리 / 과제 관리 중복 검토) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
-| X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 아이디어 |
+| X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 구현됨 (S5, [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41)) |
 | X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 아이디어 |
 | X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
@@ -36,6 +36,11 @@
 | X28 | 점수 공개 시점 설정 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 아이디어 |
+| X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
+| X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
+| X33 | 여러 강좌 비교 | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
+| X34 | 마감 임박 알림 · 기준 시간 설정 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
+| X35 | 강좌별 학생 통계 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
 
 ## X1. 마이페이지
 - 로그인한 사용자가 자기 이름과 비밀번호를 바꾼다.
@@ -143,6 +148,7 @@
 
 ## X15. 마감 임박 과제 표시
 - 출처: [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) S2 개선점 — 마감 임박 표시
+- **구현됨**: S5에서 "종료까지 24시간 이내이고 아직 제출하지 않은 과제"로 구현했다. ([PR #41](https://github.com/daengsuk2/college_subject_site/pull/41)) 알림과 기준 시간 설정은 X34에서 다룬다.
 - 마감이 가까운 과제를 눈에 띄게 표시한다. 요구사항 S5(내 통계)에 "마감 임박 과제"가 포함되어 있어 S5 때 함께 구현할 수 있다.
 - 고려할 점
   - 임박 기준(예: 24시간 이내)을 정해야 한다.
@@ -248,3 +254,37 @@
 - 고려할 점
   - 충돌 예외를 잡은 뒤 재조회해 덮어쓸지, 안내만 할지 정해야 한다.
   - 같은 제출을 동시에 채점하는 경우(마지막 저장이 적용됨)도 함께 검토할 수 있다.
+
+## X31. 기간별 추이 차트 (제출률 · 평균 점수)
+- 출처: [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) I6 · S5 개선점 — 기간별 추이
+- 주차나 날짜에 따라 제출률과 평균 점수가 어떻게 변하는지 선 차트로 보여 준다.
+- 고려할 점
+  - 과제의 시작일시나 채점 시각(`graded_at`)을 기준으로 묶을 수 있어 컬럼 추가는 필요 없다.
+  - 강사용(강좌 기준)과 학생용(내 기준)을 따로 만들지 정해야 한다.
+
+## X32. 통계 내보내기 (엑셀 · CSV)
+- 출처: [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) I6 개선점 — 내보내기
+- 통계 화면의 과제별 표와 미제출자 표를 파일로 내려받는다.
+- 고려할 점
+  - 학번 · 이름이 들어 있어 본인 강좌의 강사만 받을 수 있어야 한다 (B5).
+  - 엑셀에서 수식으로 실행되지 않도록 `=`, `+` 등으로 시작하는 값을 처리해야 한다. (X8과 같은 주의)
+
+## X33. 여러 강좌 비교
+- 출처: [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) I6 개선점 — 강좌 비교
+- 지금은 강좌를 하나씩 골라 보는데, 내 강좌들의 제출률 · 평균 점수를 한 화면에서 비교한다.
+- 고려할 점
+  - 강좌 수만큼 쿼리가 나가지 않도록 강사 기준으로 한 번에 group by 해야 한다.
+
+## X34. 마감 임박 알림 · 기준 시간 설정
+- 출처: [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) S5 개선점 — 마감 임박 알림
+- 마감이 가까운 과제를 알려 주고, 임박 기준(지금은 24시간 고정)을 바꿀 수 있게 한다.
+- 고려할 점
+  - 기준 시간은 현재 코드의 상수 하나다. 사용자별로 바꾸려면 저장할 곳(컬럼)이 필요하다.
+  - 알림 방식(대시보드 배지, 이메일 등)은 X27과 함께 정한다.
+
+## X35. 강좌별 학생 통계
+- 출처: [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) S5 개선점 — 강좌별 통계
+- 학생 대시보드에서 수강 강좌별로 제출률 · 평균 점수를 나누어 보여 준다.
+- 고려할 점
+  - 지금은 수강 강좌 전체를 합쳐 계산한다.
+  - 다른 학생의 점수나 전체 평균은 보여 주지 않는다는 원칙은 유지한다.
