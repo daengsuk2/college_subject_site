@@ -82,8 +82,10 @@
 
     <!-- 수강생 목록 (I2) -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">수강생 목록</h6>
+            <a th:href="@{/instructor/courses/{id}/students.csv(id=${course.id})}"
+               class="btn btn-outline-primary btn-sm" id="studentsCsv">CSV 내려받기</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
