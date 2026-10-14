@@ -63,7 +63,11 @@
                     <span class="text-gray-600 ml-2"
                           th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')} + ' 제출'"></span>
                 </p>
-                <p class="mb-3" style="white-space: pre-wrap;" th:text="${submission.content}"></p>
+                <p class="mb-2" style="white-space: pre-wrap;" th:text="${submission.content}"></p>
+                <p class="mb-3" th:if="${submission.hasFile()}">
+                    첨부파일: <a th:href="@{/submissions/{id}/file(id=${submission.id})}"
+                              th:text="${submission.originalFilename}"></a>
+                </p>
             </div>
             <p th:if="${submission == null}" class="text-gray-600">아직 제출하지 않았습니다.</p>
 

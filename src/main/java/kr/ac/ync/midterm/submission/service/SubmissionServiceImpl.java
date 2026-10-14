@@ -13,6 +13,8 @@ import kr.ac.ync.midterm.assignment.exception.AssignmentNotFoundException;
 import kr.ac.ync.midterm.assignment.repository.AssignmentRepository;
 import kr.ac.ync.midterm.course.repository.EnrollmentRepository;
 import kr.ac.ync.midterm.global.exception.ForbiddenException;
+import kr.ac.ync.midterm.global.storage.FileStorage;
+import kr.ac.ync.midterm.global.storage.StoredFile;
 import kr.ac.ync.midterm.submission.domain.Submission;
 import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
@@ -31,6 +33,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 	private final AssignmentRepository assignmentRepository;
 	private final EnrollmentRepository enrollmentRepository;
 	private final UserRepository userRepository;
+	private final FileStorage fileStorage;
 	private final Clock clock;
 
 	@Override
@@ -55,21 +58,45 @@ public class SubmissionServiceImpl implements SubmissionService {
 		}
 
 		Optional<Submission> existing = submissionRepository.findByAssignmentIdAndStudentId(assignmentId, studentId);
-		if (existing.isPresent()) {
-			Submission submission = existing.get();
-			if (submission.isGraded()) {
-				throw new AlreadyGradedException();
-			}
-			submission.resubmit(request.getContent(), now);
-			return;
+		if (existing.isPresent() && existing.get().isGraded()) {
+			throw new AlreadyGradedException();
 		}
 
-		submissionRepository.save(Submission.builder()
-				.assignment(assignment)
-				.student(userRepository.getReferenceById(studentId))
-				.content(request.getContent())
-				.submittedAt(now)
-				.build());
+		// 첨부파일(S3-b)은 수강 · 기간 · 채점 완료 검사를 모두 통과한 뒤에만 저장한다
+		StoredFile stored = fileStorage.store(request.getFile());
+		String oldStoredName = existing.map(Submission::getFilePath).orElse(null);
+
+		try {
+			if (existing.isPresent()) {
+				Submission submission = existing.get();
+				submission.resubmit(request.getContent(), now);
+				if (stored != null) {
+					submission.attachFile(stored.storedName(), stored.originalName());
+				}
+			} else {
+				Submission submission = Submission.builder()
+						.assignment(assignment)
+						.student(userRepository.getReferenceById(studentId))
+						.content(request.getContent())
+						.submittedAt(now)
+						.build();
+				if (stored != null) {
+					submission.attachFile(stored.storedName(), stored.originalName());
+				}
+				submissionRepository.save(submission);
+			}
+		} catch (RuntimeException e) {
+			// 저장에 실패하면 방금 올린 파일이 남지 않게 지운다
+			if (stored != null) {
+				fileStorage.deleteQuietly(stored.storedName());
+			}
+			throw e;
+		}
+
+		// 새 파일로 교체했다면 이전 파일을 지운다
+		if (stored != null) {
+			fileStorage.deleteQuietly(oldStoredName);
+		}
 	}
 
 	private Assignment findEnrolledAssignment(Long studentId, Long assignmentId) {
