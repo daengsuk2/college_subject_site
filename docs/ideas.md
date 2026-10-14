@@ -36,7 +36,7 @@
 | X28 | 점수 공개 시점 설정 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
 | X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 구현됨 |
-| X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
+| X31 | 기간별 추이 차트 (제출률 · 평균 점수) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 구현됨 |
 | X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 구현됨 |
 | X33 | 여러 강좌 비교 | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
 | X34 | 마감 임박 알림 · 기준 시간 설정 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
@@ -256,7 +256,7 @@
   - 충돌 예외를 잡은 뒤 재조회해 덮어쓸지, 안내만 할지 정해야 한다.
   - 같은 제출을 동시에 채점하는 경우(마지막 저장이 적용됨)도 함께 검토할 수 있다.
 
-## X31. 기간별 추이 차트 (제출률 · 평균 점수)
+## X31. 기간별 추이 차트 (제출률 · 평균 점수) (구현됨)
 - 출처: [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39), [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) I6 · S5 개선점 — 기간별 추이
 - 주차나 날짜에 따라 제출률과 평균 점수가 어떻게 변하는지 선 차트로 보여 준다.
 - 고려할 점

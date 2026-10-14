@@ -107,6 +107,26 @@
             </div>
         </div>
 
+        <!-- 과제별 추이 (X31): 시간 간격이 아니라 과제 순서에 따른 변화 -->
+        <div class="row" th:if="${stats.possibleCount > 0}">
+            <div class="col-12 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">과제별 추이 (시작일시 순서대로)</h6>
+                    </div>
+                    <div class="card-body">
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                        <p class="small text-gray-600 mt-2 mb-0">
+                            과제를 시작일시 순서대로 나열한 것이며, 과제 사이의 시간 간격은 반영하지 않습니다.
+                            평균 점수 비율은 평균 점수를 해당 과제의 배점으로 나눈 값이고, 채점된 제출이 없는 과제는 선이 끊깁니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 과제별 표 -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -188,6 +208,13 @@
             var labels = /*[[${chartLabels}]]*/ [];
             var averages = /*[[${chartAverages}]]*/ [];
             var maxScores = /*[[${chartMaxScores}]]*/ [];
+            var trendLabels = /*[[${trend.labels}]]*/ [];
+            var trendSubmissionRates = /*[[${trend.submissionRates}]]*/ [];
+            var trendScoreRates = /*[[${trend.scoreRates}]]*/ [];
+            var trendSubmitted = /*[[${trend.submittedCounts}]]*/ [];
+            var trendEnrolled = /*[[${trend.enrolledCounts}]]*/ [];
+            var trendAverages = /*[[${trend.averageScores}]]*/ [];
+            var trendMaxScores = /*[[${trend.maxScores}]]*/ [];
 
             new Chart(document.getElementById('submissionChart'), {
                 type: 'doughnut',
@@ -196,6 +223,42 @@
                     datasets: [{ data: [submitted, notSubmitted], backgroundColor: ['#1cc88a', '#f6c23e'] }]
                 },
                 options: { maintainAspectRatio: false, legend: { position: 'bottom' }, cutoutPercentage: 60 }
+            });
+
+            // 과제별 추이 선 차트: 제출률(%)과 평균 점수 비율(%)을 0~100 한 축에 그린다. 값이 null이면 선이 끊긴다
+            new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [
+                        { label: '제출률(%)', data: trendSubmissionRates, borderColor: '#1cc88a', backgroundColor: '#1cc88a',
+                          fill: false, lineTension: 0, spanGaps: false, pointRadius: 4 },
+                        { label: '평균 점수 비율(%)', data: trendScoreRates, borderColor: '#4e73df', backgroundColor: '#4e73df',
+                          fill: false, lineTension: 0, spanGaps: false, pointRadius: 4 }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: { position: 'bottom' },
+                    scales: {
+                        yAxes: [{ ticks: { beginAtZero: true, min: 0, max: 100, stepSize: 20 } }],
+                        xAxes: [{ ticks: { callback: function (value) {
+                            return value.length > 12 ? value.substring(0, 12) + '…' : value;
+                        } } }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function (items) { return trendLabels[items[0].index]; },
+                            label: function (item) {
+                                var i = item.index;
+                                if (item.datasetIndex === 0) {
+                                    return '제출률 ' + item.yLabel + '% (' + trendSubmitted[i] + ' / ' + trendEnrolled[i] + '명)';
+                                }
+                                return '평균 점수 비율 ' + item.yLabel + '% (평균 ' + trendAverages[i] + '점 / 배점 ' + trendMaxScores[i] + '점)';
+                            }
+                        }
+                    }
+                }
             });
 
             new Chart(document.getElementById('averageChart'), {
