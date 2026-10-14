@@ -2,6 +2,7 @@ package kr.ac.ync.midterm.submission.service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import kr.ac.ync.midterm.global.storage.FileStorage;
 import kr.ac.ync.midterm.global.storage.StoredFile;
 import kr.ac.ync.midterm.submission.domain.Submission;
 import kr.ac.ync.midterm.submission.dto.request.SubmissionRequest;
+import kr.ac.ync.midterm.submission.dto.response.MySubmissionResponse;
 import kr.ac.ync.midterm.submission.dto.response.SubmissionResponse;
 import kr.ac.ync.midterm.submission.exception.AlreadyGradedException;
 import kr.ac.ync.midterm.submission.exception.SubmissionPeriodException;
@@ -41,6 +43,16 @@ public class SubmissionServiceImpl implements SubmissionService {
 		Assignment assignment = findEnrolledAssignment(studentId, assignmentId);
 		return submissionRepository.findByAssignmentIdAndStudentId(assignment.getId(), studentId)
 				.map(SubmissionResponse::of);
+	}
+
+	/**
+	 * 내 제출 목록 (S4). 학생 id로 걸러 본인의 제출만 조회한다.
+	 */
+	@Override
+	public List<MySubmissionResponse> findMySubmissions(Long studentId) {
+		return submissionRepository.findMySubmissions(studentId).stream()
+				.map(MySubmissionResponse::of)
+				.toList();
 	}
 
 	/**

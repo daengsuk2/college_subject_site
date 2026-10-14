@@ -58,8 +58,8 @@
         <div class="card-body">
             <div th:if="${submission != null}">
                 <p class="mb-2">
-                    <span class="badge" th:classappend="${submission.graded} ? 'badge-primary' : 'badge-success'"
-                          th:text="${submission.graded} ? '채점 완료' : '제출함'"></span>
+                    <span class="badge" th:classappend="${submission.graded} ? 'badge-primary' : 'badge-secondary'"
+                          th:text="${submission.graded} ? '채점 완료' : '채점 대기'"></span>
                     <span class="text-gray-600 ml-2"
                           th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')} + ' 제출'"></span>
                 </p>
@@ -68,6 +68,16 @@
                     첨부파일: <a th:href="@{/submissions/{id}/file(id=${submission.id})}"
                               th:text="${submission.originalFilename}"></a>
                 </p>
+
+                <!-- 채점 결과 (S4): 채점 후에만 점수와 피드백이 보인다 -->
+                <div th:if="${submission.graded}" class="border-left-primary pl-3 mb-3" id="gradeResult">
+                    <p class="mb-1"><strong>점수</strong>
+                        <span th:text="${submission.score} + ' / ' + ${assignment.maxScore}"></span></p>
+                    <p class="mb-1"><strong>피드백</strong></p>
+                    <p class="mb-0" style="white-space: pre-wrap;" th:if="${submission.hasFeedback()}"
+                       th:text="${submission.feedback}"></p>
+                    <p class="mb-0 text-gray-600" th:unless="${submission.hasFeedback()}">피드백이 없습니다.</p>
+                </div>
             </div>
             <p th:if="${submission == null}" class="text-gray-600">아직 제출하지 않았습니다.</p>
 

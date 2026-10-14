@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>내 제출 · 점수</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">내 제출 · 점수</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">제출한 과제</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" th:if="${!#lists.isEmpty(submissions)}">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>강좌</th>
+                        <th>과제</th>
+                        <th>제출 시각</th>
+                        <th>상태</th>
+                        <th>점수</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="submission : ${submissions}">
+                        <td th:text="${submission.courseName}"></td>
+                        <td>
+                            <a th:href="@{/student/assignments/{id}(id=${submission.assignmentId})}"
+                               th:text="${submission.assignmentTitle}"></a>
+                        </td>
+                        <td th:text="${#temporals.format(submission.submittedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${submission.graded} ? 'badge-primary' : 'badge-secondary'"
+                                  th:text="${submission.graded} ? '채점 완료' : '채점 대기'"></span>
+                        </td>
+                        <td>
+                            <span th:if="${submission.graded}"
+                                  th:text="${submission.score} + ' / ' + ${submission.maxScore}"></span>
+                            <span th:unless="${submission.graded}" class="text-gray-600">-</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-600 mb-0" th:if="${#lists.isEmpty(submissions)}">
+                아직 제출한 과제가 없습니다. <a th:href="@{/student/assignments}">내 과제</a>에서 과제를 제출해 보세요.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
