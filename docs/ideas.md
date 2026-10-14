@@ -6,7 +6,7 @@
 
 | # | 아이디어 | 출처 | 상태 |
 |---|----------|------|------|
-| X1 | 마이페이지 (이름 · 비밀번호 변경) | 기획 | 아이디어 |
+| X1 | 마이페이지 (이름 · 비밀번호 변경) | 기획 | 구현됨 |
 | X2 | 학번 · 이름 명단 확인 후 회원가입 | 기획 | 아이디어 |
 | X3 | 내 수강 강좌 보기 | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
 | X4 | 수강 등록 정정 (일정 시간 내) | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
@@ -42,7 +42,8 @@
 | X34 | 마감 임박 알림 · 기준 시간 설정 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
 | X35 | 강좌별 학생 통계 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
 
-## X1. 마이페이지
+## X1. 마이페이지 (구현됨)
+- **구현됨**: `/mypage`에서 이름과 비밀번호를 바꾼다. 요구사항은 [requirements.md](requirements.md)의 X1에 옮겼다.
 - 로그인한 사용자가 자기 이름과 비밀번호를 바꾼다.
 - DB 컬럼 추가 없이 가능하다 (users 테이블만 사용).
 - 고려: 비밀번호 변경 시 현재 비밀번호 확인, 8자 이상 검증, 이메일은 로그인 ID라 변경 제외.

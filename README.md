@@ -137,6 +137,7 @@ src/main/resources/
 | U2 | 로그인 · 로그아웃 (Spring Security 폼 로그인) | 완료 (DB 사용자 로그인, 테스트 통과) |
 | U3 | 역할별 메뉴 (강사 / 학생 사이드바 분리) | 완료 (사이드바 분리 + `/instructor/**` · `/student/**` 서버 접근 제한 403, 테스트 통과) |
 | U4 | 강사 계정 (초기 데이터로 생성, 가입 불가) | 완료 (`.env`의 `INSTRUCTOR_*`로 생성) |
+| X1 | 마이페이지 (이름 · 비밀번호 변경, 선택 기능) | 완료 (`/mypage`, DB 변경 없음) |
 
 ### 강사
 | ID | 기능 | 상태 |
@@ -199,6 +200,7 @@ assignment 1:N submission, users(학생) 1:N submission.
 |------|-----|------|
 | 공통 | `/login` · `/signup` | 로그인 · 학생 회원가입 |
 | 공통 | `/` | 역할별 대시보드 |
+| 공통 | `/mypage` | 마이페이지 (이름 · 비밀번호 변경) |
 | 강사 | `/instructor/courses` · `/{id}` | 강좌 목록 · 상세 (참여코드, 수강생) |
 | 강사 | `/instructor/assignments/new` · `/{id}/edit` | 과제 등록 · 수정 |
 | 강사 | `/instructor/assignments/{id}/submissions` | 제출 현황 + 미제출자 |
@@ -213,6 +215,7 @@ assignment 1:N submission, users(학생) 1:N submission.
 
 강사 계정은 가입할 수 없고, 앱 시작 시 `.env`의 `INSTRUCTOR_EMAIL` · `INSTRUCTOR_NAME` · `INSTRUCTOR_PASSWORD`로 만들어집니다.
 (비밀번호가 비어 있으면 만들지 않고, 이미 있으면 건너뜁니다.) 비밀번호는 저장소에 기록하지 않으니 시연 환경의 `.env`를 확인하세요.
+마이페이지(`/mypage`)에서 강사가 비밀번호를 바꾸면 DB의 값만 바뀌고 `.env`는 그대로입니다. 이후 `.env`의 값은 실제 비밀번호와 달라지지만, 앱은 `.env`로 기존 계정을 덮어쓰지 않습니다.
 
 학생 계정은 `/signup`에서 가입합니다.
 
