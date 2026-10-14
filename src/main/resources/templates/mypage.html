@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>마이페이지</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">마이페이지</h1>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <!-- 내 정보 (이메일 · 학번 · 역할은 바꿀 수 없다) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">내 정보</h6>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">이메일 (로그인 ID)</dt>
+                <dd class="col-sm-9" id="myEmail" th:text="${me.email}"></dd>
+                <dt class="col-sm-3">역할</dt>
+                <dd class="col-sm-9" th:text="${me.role.name() == 'INSTRUCTOR'} ? '강사' : '학생'"></dd>
+                <dt class="col-sm-3" th:if="${me.studentNo != null}">학번</dt>
+                <dd class="col-sm-9" th:if="${me.studentNo != null}" th:text="${me.studentNo}"></dd>
+                <dt class="col-sm-3">이름</dt>
+                <dd class="col-sm-9" id="myName" th:text="${me.name}"></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- 이름 변경 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">이름 변경</h6>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/mypage/name}" th:object="${nameChangeRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="mypageName">이름</label>
+                    <input type="text" id="mypageName" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" autocomplete="name">
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">이름 저장</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 비밀번호 변경 -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">비밀번호 변경</h6>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/mypage/password}" th:object="${passwordChangeRequest}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="currentPassword">현재 비밀번호</label>
+                    <input type="password" id="currentPassword" th:field="*{currentPassword}" class="form-control"
+                           th:classappend="${#fields.hasErrors('currentPassword')} ? 'is-invalid'"
+                           autocomplete="current-password">
+                    <div class="invalid-feedback" th:errors="*{currentPassword}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">새 비밀번호 (8자 이상)</label>
+                    <input type="password" id="newPassword" th:field="*{newPassword}" class="form-control"
+                           th:classappend="${#fields.hasErrors('newPassword')} ? 'is-invalid'"
+                           autocomplete="new-password">
+                    <div class="invalid-feedback" th:errors="*{newPassword}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="newPasswordConfirm">새 비밀번호 확인</label>
+                    <input type="password" id="newPasswordConfirm" th:field="*{newPasswordConfirm}"
+                           class="form-control"
+                           th:classappend="${#fields.hasErrors('newPasswordConfirm')} ? 'is-invalid'"
+                           autocomplete="new-password">
+                    <div class="invalid-feedback" th:errors="*{newPasswordConfirm}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">비밀번호 변경</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

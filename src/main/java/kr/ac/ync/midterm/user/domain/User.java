@@ -48,6 +48,16 @@ public class User {
 		this.role = role;
 	}
 
+	/** 이름 변경 (마이페이지). 이메일 · 학번 · 역할은 바꾸는 메서드를 두지 않는다. */
+	public void changeName(String name) {
+		this.name = name;
+	}
+
+	/** 비밀번호 변경 (마이페이지). 이미 BCrypt로 인코딩된 값을 받는다. */
+	public void changePassword(String encodedPassword) {
+		this.password = encodedPassword;
+	}
+
 	/**
 	 * 이메일은 공백 제거 후 소문자로 저장·조회한다. (가입, 로그인, 초기 데이터에서 공통 사용)
 	 */
