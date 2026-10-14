@@ -29,6 +29,13 @@ public class StudentCourseController {
 
 	private final EnrollmentService enrollmentService;
 
+	/** 내 수강 강좌 (X3). 수강 등록에 성공하면 이 화면으로 이동해 방금 등록한 강좌를 바로 확인한다. */
+	@GetMapping
+	public String myCourses(@AuthenticationPrincipal CustomUserDetails user, Model model) {
+		model.addAttribute("courses", enrollmentService.findMyCourses(user.getId()));
+		return "student/courses";
+	}
+
 	@GetMapping("/join")
 	public String joinForm(Model model) {
 		model.addAttribute("enrollRequest", new EnrollRequest());
@@ -47,7 +54,7 @@ public class StudentCourseController {
 			EnrollmentResponse enrolled = enrollmentService.enroll(user.getId(), enrollRequest);
 			redirectAttributes.addFlashAttribute("message",
 					enrolled.courseName() + " 강좌에 수강 등록되었습니다.");
-			return "redirect:/student/courses/join";
+			return "redirect:/student/courses";
 		} catch (InvalidJoinCodeException | AlreadyEnrolledException e) {
 			bindingResult.rejectValue("joinCode", "enroll.failed", e.getMessage());
 			return "student/join";

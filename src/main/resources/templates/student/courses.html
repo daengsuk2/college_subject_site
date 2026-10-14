@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>내 수강 강좌</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">내 수강 강좌</h1>
+
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">수강 중인 강좌</h6>
+            <a th:href="@{/student/courses/join}" class="btn btn-primary btn-sm">수강 등록</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered js-datatable" id="myCourseTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>강좌</th>
+                        <th>담당 강사</th>
+                        <th>수강 등록일</th>
+                        <th>시작된 과제</th>
+                        <th>내가 제출한 과제</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="course : ${courses}">
+                        <td>
+                            <!-- 강좌명을 누르면 그 강좌의 과제만 걸러진 내 과제 목록으로 이동한다 -->
+                            <a th:href="@{/student/assignments(course=${course.courseName})}"
+                               th:text="${course.courseName}"></a>
+                        </td>
+                        <td th:text="${course.instructorName}"></td>
+                        <td th:text="${#temporals.format(course.joinedAt, 'yyyy-MM-dd HH:mm')}"
+                            th:attr="data-order=${#temporals.format(course.joinedAt, 'yyyyMMddHHmmss')}"></td>
+                        <td th:text="${course.startedAssignmentCount} + '개'"
+                            th:attr="data-order=${course.startedAssignmentCount}"></td>
+                        <td th:text="${course.submittedCount} + ' / ' + ${course.startedAssignmentCount}"
+                            th:attr="data-order=${course.submittedCount}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(courses)}">
+                        <td colspan="5" class="text-center text-gray-600">
+                            아직 수강 등록한 강좌가 없습니다.
+                            <a th:href="@{/student/courses/join}">수강 등록</a>에서 강사에게 받은 참여코드를 입력해 보세요.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="style"><th:block th:replace="~{fragments/datatables :: style}"></th:block></th:block>
+<th:block layout:fragment="script"><th:block th:replace="~{fragments/datatables :: script}"></th:block></th:block>
+</body>
+</html>

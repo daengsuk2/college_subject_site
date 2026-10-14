@@ -66,7 +66,7 @@ class StudentCourseControllerTest extends BaseController {
 						.with(csrf())
 						.param("joinCode", "  aaaaa2 "))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/student/courses/join"))
+				.andExpect(redirectedUrl("/student/courses"))
 				.andExpect(flash().attribute("message", containsString("자바스프링")));
 
 		assertThat(enrollmentRepository.existsByCourseIdAndStudentId(saved.getId(), student.getId())).isTrue();

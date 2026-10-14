@@ -1,5 +1,9 @@
 package kr.ac.ync.midterm.course.service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +12,7 @@ import kr.ac.ync.midterm.course.domain.Course;
 import kr.ac.ync.midterm.course.domain.Enrollment;
 import kr.ac.ync.midterm.course.dto.request.EnrollRequest;
 import kr.ac.ync.midterm.course.dto.response.EnrollmentResponse;
+import kr.ac.ync.midterm.course.dto.response.MyCourseResponse;
 import kr.ac.ync.midterm.course.exception.AlreadyEnrolledException;
 import kr.ac.ync.midterm.course.exception.InvalidJoinCodeException;
 import kr.ac.ync.midterm.course.repository.CourseRepository;
@@ -24,6 +29,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	private final CourseRepository courseRepository;
 	private final EnrollmentRepository enrollmentRepository;
 	private final UserRepository userRepository;
+	private final Clock clock;
+
+	/**
+	 * 내 수강 강좌 (X3). 학생 id로 걸러 본인의 수강만 조회하고, 과제 수는 시작된 과제만 센다.
+	 */
+	@Override
+	public List<MyCourseResponse> findMyCourses(Long studentId) {
+		return enrollmentRepository.findMyCourses(studentId, LocalDateTime.now(clock));
+	}
 
 	/**
 	 * 참여코드로 수강 등록 (S1). 입력한 코드는 앞뒤 공백을 제거하고 대문자로 맞춰 비교한다.
