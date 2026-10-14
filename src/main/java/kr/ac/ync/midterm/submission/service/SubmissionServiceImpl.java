@@ -80,6 +80,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 		// 첨부파일(S3-b)은 수강 · 기간 · 채점 완료 검사를 모두 통과한 뒤에만 저장한다
 		StoredFile stored = fileStorage.store(request.getFile());
+		// 커밋 단계에서 실패해 롤백되더라도 방금 올린 파일이 남지 않게 한다 (X22)
+		fileStorage.deleteOnRollback(stored == null ? null : stored.storedName());
 		String oldStoredName = existing.map(Submission::getFilePath).orElse(null);
 
 		try {
@@ -115,9 +117,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 			throw e;
 		}
 
-		// 새 파일로 교체했다면 이전 파일을 지운다
+		// 새 파일로 교체했다면 이전 파일을 DB 변경이 확정된 뒤에 지운다. 커밋이 실패하면 이전 파일이 그대로 남아야 한다 (X22)
 		if (stored != null) {
-			fileStorage.deleteQuietly(oldStoredName);
+			fileStorage.deleteAfterCommit(oldStoredName);
 		}
 	}
 

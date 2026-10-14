@@ -43,6 +43,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Course course = findOwnedCourse(instructorId, courseId);
 		validatePeriod(request.getStartAt(), request.getEndAt());
 		StoredFile stored = fileStorage.store(request.getFile());
+		// 커밋 단계에서 실패해 롤백되더라도 방금 올린 파일이 남지 않게 한다 (X22)
+		fileStorage.deleteOnRollback(stored == null ? null : stored.storedName());
 
 		try {
 			Assignment assignment = Assignment.builder()
@@ -92,6 +94,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 		Assignment assignment = findOwnedAssignment(instructorId, assignmentId);
 		validatePeriod(request.getStartAt(), request.getEndAt());
 		StoredFile stored = fileStorage.store(request.getFile());
+		fileStorage.deleteOnRollback(stored == null ? null : stored.storedName());
 		String oldStoredName = assignment.getFilePath();
 
 		try {
@@ -111,8 +114,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 			throw e;
 		}
 
+		// 이전 파일은 DB 변경이 확정된 뒤에 지운다. 커밋이 실패하면 이전 파일이 그대로 남아야 한다 (X22)
 		if (stored != null) {
-			fileStorage.deleteQuietly(oldStoredName);
+			fileStorage.deleteAfterCommit(oldStoredName);
 		}
 		return AssignmentResponse.from(assignment);
 	}
@@ -131,7 +135,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 		String storedName = assignment.getFilePath();
 		assignmentRepository.delete(assignment);
-		fileStorage.deleteQuietly(storedName);
+		// DB 삭제가 확정된 뒤에 파일을 지운다. 커밋이 실패하면 과제와 파일이 모두 남는다 (X22)
+		fileStorage.deleteAfterCommit(storedName);
 	}
 
 	/**
