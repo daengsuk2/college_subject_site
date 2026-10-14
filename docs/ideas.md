@@ -40,7 +40,7 @@
 | X32 | 통계 내보내기 (엑셀 · CSV) | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 구현됨 |
 | X33 | 여러 강좌 비교 | [PR #39](https://github.com/daengsuk2/college_subject_site/pull/39) (I6) | 아이디어 |
 | X34 | 마감 임박 알림 · 기준 시간 설정 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
-| X35 | 강좌별 학생 통계 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 아이디어 |
+| X35 | 강좌별 학생 통계 | [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) (S5) | 구현됨 |
 
 ## X1. 마이페이지 (구현됨)
 - **구현됨**: `/mypage`에서 이름과 비밀번호를 바꾼다. 요구사항은 [requirements.md](requirements.md)의 X1에 옮겼다.
@@ -283,7 +283,7 @@
   - 기준 시간은 현재 코드의 상수 하나다. 사용자별로 바꾸려면 저장할 곳(컬럼)이 필요하다.
   - 알림 방식(대시보드 배지, 이메일 등)은 X27과 함께 정한다.
 
-## X35. 강좌별 학생 통계
+## X35. 강좌별 학생 통계 (구현됨)
 - 출처: [PR #41](https://github.com/daengsuk2/college_subject_site/pull/41) S5 개선점 — 강좌별 통계
 - 학생 대시보드에서 수강 강좌별로 제출률 · 평균 점수를 나누어 보여 준다.
 - 고려할 점

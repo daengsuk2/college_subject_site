@@ -8,7 +8,20 @@ import java.util.List;
  * 제출률 = 내가 제출한 과제 수 / 수강 강좌의 시작된 과제 수 (예정 과제는 제출할 수 없으므로 제외).
  */
 public record StudentDashboardResponse(long courseCount, long startedAssignmentCount, long submittedCount,
-		long gradedCount, Double averageScore, Double averageScoreRate, List<DueSoonRow> dueSoon) {
+		long gradedCount, Double averageScore, Double averageScoreRate, List<DueSoonRow> dueSoon,
+		List<CourseStatRow> courses) {
+
+	/**
+	 * 강좌별 통계 한 줄 (X35). 위 전체 값과 같은 정의를 수강 강좌별로 나눈 것이라, 강좌별 값을 합치면 전체와 같다.
+	 * 제출률은 시작된 과제가 없으면 null, 평균 점수는 채점된 제출이 없으면 null이다.
+	 */
+	public record CourseStatRow(Long courseId, String courseName, long startedAssignmentCount, long submittedCount,
+			long gradedCount, Double averageScore, Double averageScoreRate, long dueSoonCount) {
+
+		public Double submissionRate() {
+			return startedAssignmentCount == 0 ? null : submittedCount * 100.0 / startedAssignmentCount;
+		}
+	}
 
 	/** 제출률(%). 시작된 과제가 없으면 null */
 	public Double submissionRate() {

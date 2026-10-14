@@ -89,6 +89,44 @@
             </div>
         </div>
 
+        <!-- 강좌별 통계 (X35): 위 전체 값과 같은 정의를 수강 강좌별로 나눈 것 -->
+        <div class="card shadow mb-4" th:if="${!#lists.isEmpty(student.courses)}">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">강좌별 통계</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered js-datatable" id="courseStatTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>강좌</th>
+                            <th>제출률</th>
+                            <th>제출 / 시작된 과제</th>
+                            <th>평균 점수</th>
+                            <th>마감 임박</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${student.courses}">
+                            <td>
+                                <a th:href="@{/student/assignments(course=${row.courseName})}"
+                                   th:text="${row.courseName}"></a>
+                            </td>
+                            <td th:text="${row.submissionRate() != null} ? ${#numbers.formatDecimal(row.submissionRate(), 1, 1)} + '%' : '-'"
+                                th:attr="data-order=${row.submissionRate() != null} ? ${row.submissionRate()} : -1"></td>
+                            <td th:text="${row.submittedCount} + ' / ' + ${row.startedAssignmentCount}"
+                                th:attr="data-order=${row.submittedCount}"></td>
+                            <td th:text="${row.averageScore != null} ? ${#numbers.formatDecimal(row.averageScore, 1, 1)} + '점 (배점 대비 ' + ${#numbers.formatDecimal(row.averageScoreRate, 1, 1)} + '%)' : '-'"
+                                th:attr="data-order=${row.averageScore != null} ? ${row.averageScore} : -1"></td>
+                            <td th:text="${row.dueSoonCount} + '개'"
+                                th:attr="data-order=${row.dueSoonCount}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <p class="text-gray-600" th:if="${student.courseCount == 0}">
             아직 수강 등록한 강좌가 없습니다. 사이드바의 수강 등록에서 참여코드를 입력해 보세요.
         </p>
@@ -171,5 +209,16 @@
         </div>
     </th:block>
 </div>
+<!-- 학생 대시보드에 강좌별 표가 있을 때만 표 검색 · 정렬을 불러온다 -->
+<th:block layout:fragment="style">
+    <th:block th:if="${student != null and !#lists.isEmpty(student.courses)}">
+        <th:block th:replace="~{fragments/datatables :: style}"></th:block>
+    </th:block>
+</th:block>
+<th:block layout:fragment="script">
+    <th:block th:if="${student != null and !#lists.isEmpty(student.courses)}">
+        <th:block th:replace="~{fragments/datatables :: script}"></th:block>
+    </th:block>
+</th:block>
 </body>
 </html>

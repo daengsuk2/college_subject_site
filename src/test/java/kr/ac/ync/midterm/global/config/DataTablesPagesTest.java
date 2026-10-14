@@ -246,8 +246,11 @@ class DataTablesPagesTest extends BaseController {
 	@DisplayName("표 검색 · 정렬 스크립트는 표가 있는 화면에만 불러오고 로그인 · 대시보드 · 마이페이지 등에는 불러오지 않음")
 	void onlyWhereNeeded() throws Exception {
 		mockMvc.perform(get("/login")).andExpect(content().string(not(containsString(DATATABLES_JS))));
-		as(student, "/").andExpect(content().string(not(containsString(DATATABLES_JS))));
 		as(instructor, "/").andExpect(content().string(not(containsString(DATATABLES_JS))));
+		// 학생 대시보드는 강좌별 통계 표(X35)가 있을 때만 불러온다: 수강 강좌가 없는 학생에게는 불러오지 않는다
+		User noCourse = createUser("no-course@test.com", Role.STUDENT);
+		as(noCourse, "/").andExpect(content().string(not(containsString(DATATABLES_JS))));
+		as(student, "/").andExpect(content().string(containsString(DATATABLES_JS)));
 		as(student, "/mypage").andExpect(content().string(not(containsString(DATATABLES_JS))));
 		as(instructor, "/instructor/stats").andExpect(content().string(not(containsString(DATATABLES_JS))));
 	}
