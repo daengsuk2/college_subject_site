@@ -12,7 +12,7 @@
 | X4 | 수강 등록 정정 (일정 시간 내) | [PR #12](https://github.com/daengsuk2/college_subject_site/pull/12) (S1) | 아이디어 |
 | X5 | 강좌 삭제 (삭제 확인, 데이터 보존) | [PR #10](https://github.com/daengsuk2/college_subject_site/pull/10) (I1) | 아이디어 |
 | X6 | 수강생 제거 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
-| X7 | 수강생 표 검색 · 정렬 (DataTables) | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
+| X7 | 수강생 표 검색 · 정렬 (DataTables) | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2), [PR #31](https://github.com/daengsuk2/college_subject_site/pull/31) (I4) | 아이디어 |
 | X8 | 수강생 목록 내보내기 | [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) (I2) | 아이디어 |
 | X9 | 로그인 시도 횟수 제한 (무차별 대입 방어) | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
 | X10 | 세션 고정 · 쿠키 설정(Secure, HttpOnly) 검증 | [PR #17](https://github.com/daengsuk2/college_subject_site/pull/17) (보안 테스트) | 아이디어 |
@@ -22,12 +22,20 @@
 | X14 | 사이드바 메뉴 정리 (강좌 관리 / 과제 관리 중복 검토) | [PR #19](https://github.com/daengsuk2/college_subject_site/pull/19) (I3-a) | 아이디어 |
 | X15 | 마감 임박 과제 표시 | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 아이디어 |
 | X16 | 내 과제 필터 · 검색 (강좌별, 상태별) | [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) (S2) | 아이디어 |
-| X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
+| X17 | 여러 파일 첨부 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X18 | 첨부 삭제 버튼 (현재는 교체만 가능) | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
-| X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
+| X19 | 파일 내용(시그니처) 검사 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b), [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
 | X20 | 바이러스 검사 · 이미지 미리보기 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X21 | 업로드 진행률 표시 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
 | X22 | DB 커밋 실패 시 삭제한 파일 복구 | [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) (I3-b) | 아이디어 |
+| X23 | 제출 파일 삭제 버튼 (현재는 교체만 가능) | [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) | 아이디어 |
+| X24 | 일괄 채점 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
+| X25 | 채점 취소 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
+| X26 | 피드백 템플릿 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5) | 아이디어 |
+| X27 | 채점 결과 알림 | [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) (I5), [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
+| X28 | 점수 공개 시점 설정 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
+| X29 | 이의 신청 | [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) (S4) | 아이디어 |
+| X30 | 동시 제출 시 안내 화면 | [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) (S3-a) | 아이디어 |
 
 ## X1. 마이페이지
 - 로그인한 사용자가 자기 이름과 비밀번호를 바꾼다.
@@ -81,6 +89,7 @@
 
 ## X7. 수강생 표 검색 · 정렬 (DataTables)
 - 출처: [PR #14](https://github.com/daengsuk2/college_subject_site/pull/14) I2 개선점 — 표 검색 · 정렬
+- 추가 출처: [PR #31](https://github.com/daengsuk2/college_subject_site/pull/31) (I4) — 제출 현황 표에도 같은 검색 · 정렬이 필요하다 (제출자 표, 미제출자 표).
 - 수강생이 많아질 때를 대비해 이름 · 학번 검색과 열 정렬을 넣는다.
 - 고려할 점
   - SB Admin 2에 포함된 DataTables를 쓰면 서버 변경 없이 가능하다.
@@ -133,8 +142,8 @@
   - 과제는 강좌 상세에서도 관리되므로 메뉴를 줄일 수 있는지 검토한다.
 
 ## X15. 마감 임박 과제 표시
-- 출처: [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) S2 개선점 — 마감 임박 표시 (S5)
-- 마감이 가까운 과제를 눈에 띄게 표시한다. 요구사항 S5와 같은 기능이다.
+- 출처: [PR #21](https://github.com/daengsuk2/college_subject_site/pull/21) S2 개선점 — 마감 임박 표시
+- 마감이 가까운 과제를 눈에 띄게 표시한다. 요구사항 S5(내 통계)에 "마감 임박 과제"가 포함되어 있어 S5 때 함께 구현할 수 있다.
 - 고려할 점
   - 임박 기준(예: 24시간 이내)을 정해야 한다.
   - `Clock`과 종료일시로 계산하므로 컬럼 추가는 필요 없다.
@@ -147,6 +156,7 @@
 
 ## X17. 여러 파일 첨부
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 여러 파일
+- 추가 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) — 제출 파일도 여러 개 첨부할 수 있게 한다. 이때도 별도 첨부 테이블이 필요하다.
 - 과제 하나에 파일을 여러 개 첨부할 수 있게 한다.
 - 고려할 점
   - 지금은 `assignment`에 파일 컬럼이 하나라 별도 첨부 테이블이 필요하다 (테이블 5개 제한을 강사님께 확인).
@@ -159,6 +169,7 @@
 
 ## X19. 파일 내용(시그니처) 검사
 - 출처: [PR #23](https://github.com/daengsuk2/college_subject_site/pull/23) I3-b 개선점 — 파일 내용 검사
+- 추가 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) (S3-b) — 제출 파일에도 같은 내용 검사를 적용한다.
 - 확장자만이 아니라 파일 앞부분(시그니처)도 확인해 이름만 바꾼 파일을 거른다.
 - 고려할 점
   - 지금도 다운로드는 항상 내려받기로 응답해 파일이 실행되지는 않는다.
@@ -181,3 +192,59 @@
 - 파일을 먼저 지운 뒤 DB 커밋이 실패하면 지운 파일을 되살릴 수 없다. 드문 경우다.
 - 고려할 점
   - 삭제를 커밋 이후로 미루는 방식(트랜잭션 후처리)을 검토한다.
+
+## X23. 제출 파일 삭제 버튼 (현재는 교체만 가능)
+- 출처: [PR #29](https://github.com/daengsuk2/college_subject_site/pull/29) S3-b 개선점 — 제출 파일 삭제
+- 학생이 제출한 파일을 지우는 버튼을 추가한다. 지금은 새 파일로 교체만 가능하고, 파일 없이 되돌리는 방법이 없다.
+- 고려할 점
+  - 파일 삭제와 DB 값 비우기를 함께 처리해야 한다. (X18과 같은 방식)
+  - 채점 완료된 제출은 삭제할 수 없어야 한다 (B4).
+
+## X24. 일괄 채점
+- 출처: [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) I5 개선점 — 일괄 채점
+- 제출 현황에서 여러 제출을 골라 같은 점수나 피드백으로 한 번에 채점한다.
+- 고려할 점
+  - 모든 제출에 B5 · B6 검사를 똑같이 적용해야 한다.
+  - 일부만 실패하면 전체를 취소할지, 성공한 것만 저장할지 정해야 한다.
+
+## X25. 채점 취소
+- 출처: [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) I5 개선점 — 채점 취소
+- 잘못 채점한 제출을 채점 전 상태(SUBMITTED)로 되돌린다.
+- 고려할 점
+  - 되돌리면 B4에 따른 재제출 금지가 풀리므로, 학생이 다시 제출할 수 있게 되는 것을 안내해야 한다.
+  - 지금은 재채점(점수 수정)만 가능하다.
+
+## X26. 피드백 템플릿
+- 출처: [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) I5 개선점 — 피드백 템플릿
+- 자주 쓰는 피드백 문구를 저장해 두고 채점 화면에서 골라 넣는다.
+- 고려할 점
+  - 템플릿을 저장하려면 새 테이블이 필요해 "테이블 5개" 제한을 강사님께 확인해야 한다.
+  - 브라우저 저장소(localStorage)에 두면 DB 변경 없이 가능하다.
+
+## X27. 채점 결과 알림
+- 출처: [PR #33](https://github.com/daengsuk2/college_subject_site/pull/33) I5 · S4 개선점 — 채점 알림 (PR #35에도 같은 항목)
+- 채점이 끝나면 학생에게 알려 준다. 현재는 학생이 직접 "내 제출 · 점수"를 열어 봐야 한다.
+- 고려할 점
+  - 알림 방식(사이드바 배지, 이메일 등)을 정해야 한다.
+  - 안 읽은 알림을 저장하려면 컬럼이나 테이블이 필요하다.
+
+## X28. 점수 공개 시점 설정
+- 출처: [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) S4 개선점 — 점수 공개 시점
+- 채점이 끝나도 강사가 정한 시점까지 학생에게 점수를 보여 주지 않는다. 지금은 채점 완료 즉시 공개된다.
+- 고려할 점
+  - 과제 또는 강좌에 공개 일시나 공개 여부 컬럼이 필요하다 (README에 이유 기록).
+  - 공개 전에는 "채점 대기"로 보일지 "채점 완료(비공개)"로 보일지 정해야 한다.
+
+## X29. 이의 신청
+- 출처: [PR #35](https://github.com/daengsuk2/college_subject_site/pull/35) S4 개선점 — 이의 신청
+- 학생이 점수에 이의를 남기고 강사가 확인하는 기능이다.
+- 고려할 점
+  - 이의 내용을 저장할 컬럼이나 테이블이 필요하다.
+  - 재채점(점수 수정)과 이어지는 흐름을 정해야 한다.
+
+## X30. 동시 제출 시 안내 화면
+- 출처: [PR #27](https://github.com/daengsuk2/college_subject_site/pull/27) S3-a 확인하지 못한 것 — 동시 이중 제출
+- 같은 학생이 거의 동시에 두 번 제출하면, DB의 UNIQUE 제약으로 1건만 남지만 두 번째 요청은 안내 없이 오류 화면이 나온다. 충돌을 잡아 "이미 제출되었습니다. 다시 확인해 주세요" 같은 안내로 바꾼다.
+- 고려할 점
+  - 충돌 예외를 잡은 뒤 재조회해 덮어쓸지, 안내만 할지 정해야 한다.
+  - 같은 제출을 동시에 채점하는 경우(마지막 저장이 적용됨)도 함께 검토할 수 있다.
