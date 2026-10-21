@@ -1,6 +1,7 @@
 package kr.ac.ync.midterm.submission.service;
 
 import kr.ac.ync.midterm.submission.dto.request.ObjectionRequest;
+import kr.ac.ync.midterm.submission.dto.response.ObjectionAlerts;
 import kr.ac.ync.midterm.submission.dto.request.ObjectionResponseRequest;
 
 /**
@@ -19,4 +20,7 @@ public interface ObjectionService {
 	 * 점수를 함께 보내면 재채점되며 0 이상 배점 이하여야 한다(B6).
 	 */
 	void respond(Long instructorId, Long submissionId, ObjectionResponseRequest request);
+
+	/** 상단바 알림: 내 강좌에서 아직 답변하지 않은 이의 신청의 전체 수와 최근 몇 건. 다른 강사의 이의는 포함되지 않는다. */
+	ObjectionAlerts findPendingAlerts(Long instructorId);
 }

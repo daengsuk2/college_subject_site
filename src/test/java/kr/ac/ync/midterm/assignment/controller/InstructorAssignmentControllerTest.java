@@ -96,14 +96,36 @@ class InstructorAssignmentControllerTest extends BaseController {
 	}
 
 	@Test
-	@DisplayName("GET /instructor/assignments/new - 강좌 없이 들어오면 강좌 목록으로 안내")
+	@DisplayName("GET /instructor/assignments/new - 강좌 없이 들어오면 내 강좌를 고르는 화면이 나오고 강좌 개설 폼은 보이지 않음")
 	void newForm_withoutCourseId() throws Exception {
+		User instructor = createUser("teacher@test.com", Role.INSTRUCTOR);
+		User other = createUser("other@test.com", Role.INSTRUCTOR);
+		Course mine = courseRepository.save(
+				Course.builder().instructor(instructor).name("내 강좌").joinCode("SELEC1").build());
+		courseRepository.save(Course.builder().instructor(other).name("남의 강좌").joinCode("SELEC2").build());
+
+		mockMvc.perform(get("/instructor/assignments/new").with(user(principal(instructor))))
+				.andExpect(status().isOk())
+				.andExpect(view().name("instructor/assignment-course-select"))
+				.andExpect(content().string(containsString("과제를 등록할 강좌를 선택해 주세요")))
+				.andExpect(content().string(containsString("내 강좌")))
+				.andExpect(content().string(containsString("/instructor/assignments/new?courseId=" + mine.getId())))
+				.andExpect(content().string(not(containsString("남의 강좌"))))
+				.andExpect(content().string(not(containsString("강좌 개설"))))
+				.andExpect(content().string(not(containsString("action=\"/instructor/courses\""))));
+	}
+
+	@Test
+	@DisplayName("GET /instructor/assignments/new - 강좌가 하나도 없으면 안내만 나오고 강좌 개설 폼은 보이지 않음")
+	void newForm_withoutCourseId_noCourses() throws Exception {
 		User instructor = createUser("teacher@test.com", Role.INSTRUCTOR);
 
 		mockMvc.perform(get("/instructor/assignments/new").with(user(principal(instructor))))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/instructor/courses"))
-				.andExpect(flash().attribute("message", containsString("강좌를 먼저 선택")));
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("noCourses")))
+				.andExpect(content().string(containsString("등록할 수 있는 강좌가 없습니다.")))
+				.andExpect(content().string(not(containsString("강좌 개설"))))
+				.andExpect(content().string(not(containsString("action=\"/instructor/courses\""))));
 	}
 
 	@Test

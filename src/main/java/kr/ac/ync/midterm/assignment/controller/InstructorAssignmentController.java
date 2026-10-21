@@ -41,14 +41,13 @@ public class InstructorAssignmentController {
 	private final CourseService courseService;
 	private final AttachmentService attachmentService;
 
-	/** 과제 등록 폼. 사이드바 링크처럼 강좌 없이 들어오면 강좌 목록으로 안내한다. */
+	/** 과제 등록 폼. 사이드바 링크처럼 강좌 없이 들어오면 내 강좌 중에서 고르는 화면을 보여 준다. */
 	@GetMapping("/new")
 	public String newForm(@AuthenticationPrincipal CustomUserDetails user,
-			@RequestParam(required = false) Long courseId,
-			Model model, RedirectAttributes redirectAttributes) {
+			@RequestParam(required = false) Long courseId, Model model) {
 		if (courseId == null) {
-			redirectAttributes.addFlashAttribute("message", "과제를 등록할 강좌를 먼저 선택해 주세요.");
-			return "redirect:/instructor/courses";
+			model.addAttribute("courses", courseService.findMyCourses(user.getId()));
+			return "instructor/assignment-course-select";
 		}
 
 		CourseDetailResponse course = courseService.findMyCourseDetail(user.getId(), courseId);
