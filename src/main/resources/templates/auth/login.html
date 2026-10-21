@@ -12,9 +12,15 @@
 <body class="bg-gradient-primary">
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-xl-5 col-lg-6 col-md-8">
+        <div class="col-xl-10 col-lg-12 col-md-9">
             <div class="card o-hidden border-0 shadow-lg my-5">
                 <div class="card-body p-0">
+                  <div class="row">
+                    <!-- 왼쪽 그림 (SB Admin 2 원본 로그인 화면 구성). 좁은 화면에서는 숨긴다 -->
+                    <div class="col-lg-6 d-none d-lg-block bg-login-image" id="loginImage" role="img"
+                         aria-label="과제를 제출하고 채점받는 모습을 나타낸 그림"
+                         th:style="'background: #eef2ff url(' + @{/img/login-illustration.svg} + ') center / cover no-repeat; min-height: 480px;'"></div>
+                    <div class="col-lg-6">
                     <div class="p-5">
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">환영합니다!</h1>
@@ -54,6 +60,8 @@
                             <a class="small" th:href="@{/signup}">계정이 없으신가요? 회원가입</a>
                         </div>
                     </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>

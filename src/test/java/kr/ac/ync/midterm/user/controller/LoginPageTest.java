@@ -50,6 +50,19 @@ class LoginPageTest extends BaseController {
 	}
 
 	@Test
+	@DisplayName("GET /login - 왼쪽에 그림 영역이 있고, 좁은 화면에서는 숨겨지며(d-none d-lg-block), 그림 파일을 가리킴")
+	void loginPage_image() throws Exception {
+		mockMvc.perform(get("/login"))
+				.andExpect(content().string(containsString("id=\"loginImage\"")))
+				.andExpect(content().string(containsString("col-lg-6 d-none d-lg-block bg-login-image")))
+				.andExpect(content().string(containsString("/img/login-illustration.svg")));
+		// 그림 파일은 로그인하지 않아도 내려받을 수 있어야 한다 (로그인 화면에서 쓰는 정적 파일)
+		mockMvc.perform(get("/img/login-illustration.svg"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("<svg")));
+	}
+
+	@Test
 	@DisplayName("GET /login - 오류 · 로그아웃 · 가입 완료 안내가 파라미터에 따라 표시됨")
 	void loginPage_messages() throws Exception {
 		mockMvc.perform(get("/login").param("error", ""))
