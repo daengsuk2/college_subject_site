@@ -1,4 +1,7 @@
 spring:
+  config:
+    # 배포용 설정 파일(있을 때만 읽음). 서버에 환경변수를 넣을 수 없을 때 scripts/make-deploy-config.ps1 로 만든다. git에는 올라가지 않는다.
+    import: optional:classpath:application-local.yml
   application:
     name: vibe-midterm
   datasource:
