@@ -9,6 +9,40 @@
     </button>
 
     <ul class="navbar-nav ml-auto">
+        <!-- 강사 알림 (X29): 답변을 기다리는 이의 신청. 화면을 열 때마다 새로 조회한다 -->
+        <li class="nav-item dropdown no-arrow mx-1" th:if="${objectionAlerts != null}" id="objectionAlerts">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <span class="badge badge-danger badge-counter" id="objectionAlertCount"
+                      th:if="${objectionAlerts.count > 0}"
+                      th:text="${objectionAlerts.count > 99} ? '99+' : ${objectionAlerts.count}">3</span>
+            </a>
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                 aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">이의 신청 알림</h6>
+                <a class="dropdown-item d-flex align-items-center" th:each="alert : ${objectionAlerts.items}"
+                   th:href="@{/instructor/submissions/{id}/grade(id=${alert.submissionId})}">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-warning">
+                            <i class="fas fa-exclamation text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small text-gray-500"
+                             th:text="${#temporals.format(alert.objectionAt, 'yyyy-MM-dd HH:mm')}">2026-10-21 10:00</div>
+                        <span class="font-weight-bold"
+                              th:text="${alert.studentName} + ' · ' + ${alert.assignmentTitle}">학생 · 과제</span>
+                        <div class="small text-gray-600" th:text="${alert.courseName}">강좌</div>
+                    </div>
+                </a>
+                <span class="dropdown-item text-center small text-gray-500" th:if="${objectionAlerts.count == 0}">
+                    답변을 기다리는 이의 신청이 없습니다.</span>
+                <span class="dropdown-item text-center small text-gray-500" th:if="${objectionAlerts.hasMore()}"
+                      th:text="'외 ' + ${objectionAlerts.count - #lists.size(objectionAlerts.items)} + '건'">외 1건</span>
+            </div>
+        </li>
+
         <!-- 로그인하지 않은 경우 (오류 페이지 등): 로그인 링크만 표시 -->
         <li class="nav-item" sec:authorize="!isAuthenticated()">
             <a class="nav-link" th:href="@{/login}">로그인</a>

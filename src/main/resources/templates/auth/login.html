@@ -12,37 +12,47 @@
 <body class="bg-gradient-primary">
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-xl-6 col-lg-8 col-md-9">
+        <div class="col-xl-5 col-lg-6 col-md-8">
             <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-5">
-                    <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">로그인</h1>
-                    </div>
-
-                    <div class="alert alert-danger" th:if="${param.error}">
-                        이메일 또는 비밀번호가 올바르지 않습니다.
-                    </div>
-                    <div class="alert alert-info" th:if="${param.logout}">
-                        로그아웃 되었습니다.
-                    </div>
-                    <div class="alert alert-success" th:if="${param.signup}">
-                        회원가입이 완료되었습니다. 로그인해 주세요.
-                    </div>
-
-                    <form class="user" th:action="@{/login}" method="post">
-                        <div class="form-group">
-                            <input type="email" name="email" class="form-control form-control-user"
-                                   placeholder="이메일" required autofocus>
+                <div class="card-body p-0">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">환영합니다!</h1>
                         </div>
-                        <div class="form-group">
-                            <input type="password" name="password" class="form-control form-control-user"
-                                   placeholder="비밀번호" required>
+
+                        <div class="alert alert-danger" th:if="${param.error}">
+                            이메일 또는 비밀번호가 올바르지 않습니다.
                         </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">로그인</button>
-                    </form>
-                    <hr>
-                    <div class="text-center">
-                        <a class="small" th:href="@{/signup}">학생 회원가입</a>
+                        <div class="alert alert-info" th:if="${param.logout}">
+                            로그아웃 되었습니다.
+                        </div>
+                        <div class="alert alert-success" th:if="${param.signup}">
+                            회원가입이 완료되었습니다. 로그인해 주세요.
+                        </div>
+
+                        <form class="user" th:action="@{/login}" method="post">
+                            <div class="form-group">
+                                <input type="email" name="email" class="form-control form-control-user"
+                                       id="loginEmail" aria-describedby="emailHelp"
+                                       placeholder="이메일 주소를 입력하세요..." required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control form-control-user"
+                                       id="loginPassword" placeholder="비밀번호" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" name="remember-me" class="custom-control-input"
+                                           id="rememberMe">
+                                    <label class="custom-control-label" for="rememberMe">로그인 상태 유지</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">로그인</button>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" th:href="@{/signup}">계정이 없으신가요? 회원가입</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,22 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 	// B8: 제출이 1건이라도 있는 과제는 삭제할 수 없다
 	boolean existsByAssignmentId(Long assignmentId);
 
+	// X29 알림: 내 강좌에서 답변을 기다리는 이의 신청 (최근 신청순)
+	@Query("""
+			select s from Submission s join fetch s.assignment a join fetch a.course c join fetch s.student
+			where c.instructor.id = :instructorId
+			  and s.objectionContent is not null and s.objectionResponse is null
+			order by s.objectionAt desc, s.id desc
+			""")
+	List<Submission> findPendingObjections(@Param("instructorId") Long instructorId, Pageable pageable);
+
+	@Query("""
+			select count(s) from Submission s
+			where s.assignment.course.instructor.id = :instructorId
+			  and s.objectionContent is not null and s.objectionResponse is null
+			""")
+	long countPendingObjections(@Param("instructorId") Long instructorId);
+
 	// B3: 과제당 학생 1건
 	Optional<Submission> findByAssignmentIdAndStudentId(Long assignmentId, Long studentId);
 

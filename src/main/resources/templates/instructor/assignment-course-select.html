@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>과제 등록</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="h3 mb-4 text-gray-800">과제 등록</h1>
+
+    <!-- 과제를 등록할 강좌 선택. 강좌 개설 폼은 이 화면에 없다 (개설은 강좌 관리에서) -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">과제를 등록할 강좌를 선택해 주세요</h6>
+        </div>
+        <div class="card-body">
+            <div class="list-group" th:if="${!#lists.isEmpty(courses)}" id="courseSelectList">
+                <a th:each="course : ${courses}"
+                   th:href="@{/instructor/assignments/new(courseId=${course.id})}"
+                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <span th:text="${course.name}">강좌명</span>
+                    <span class="text-gray-600 small">참여코드 <code th:text="${course.joinCode}"></code></span>
+                </a>
+            </div>
+            <p class="text-gray-600 mb-0" th:if="${#lists.isEmpty(courses)}" id="noCourses">
+                등록할 수 있는 강좌가 없습니다. <a th:href="@{/instructor/courses}">강좌 관리</a>에서 먼저 강좌를 만들어 주세요.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
