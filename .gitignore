@@ -12,3 +12,4 @@ build/
 uploads/
 application-local.yml
 .env
+.env.deploy
