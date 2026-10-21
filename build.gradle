@@ -37,6 +37,11 @@ tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
+// 배포 서버의 Java가 17이라 운영 코드는 Java 17 기준으로 컴파일한다 (Java 21 전용 API를 쓰면 컴파일 단계에서 막힌다)
+tasks.named('compileJava') {
+	options.release = 17
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 	// 테스트는 개발 DB(midterm)와 분리된 midterm_test DB를 사용한다 (application-test.yml)

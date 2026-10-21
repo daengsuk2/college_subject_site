@@ -53,7 +53,7 @@ public class StatsServiceImpl implements StatsService {
 			if (myCourses.isEmpty()) {
 				return new StatsPageResponse(options, null);
 			}
-			selected = myCourses.getFirst();
+			selected = myCourses.get(0);
 		} else {
 			selected = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
 			if (!selected.getInstructor().getId().equals(instructorId)) {
