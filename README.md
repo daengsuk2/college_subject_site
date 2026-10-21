@@ -31,19 +31,20 @@
 
 | 구분 | 내용 |
 |------|------|
-| 백엔드 | Spring Boot 3.5.6, Java 21, Spring Data JPA |
-| DB | PostgreSQL |
+| 백엔드 | Spring Boot 3.5.6, Java 21(개발 · 빌드), Spring Data JPA — 운영 코드는 Java 17 기준으로 컴파일하므로 Java 17 서버에서도 실행됨 |
+| DB | PostgreSQL (로컬은 Docker, 배포는 Neon) |
 | 인증 | Spring Security 6 (세션 기반 폼 로그인, BCrypt) |
 | 화면 | Thymeleaf + Layout Dialect + thymeleaf-extras-springsecurity6 (서버 렌더링) |
 | UI | SB Admin 2 v4.1.4 (Bootstrap 4.6, jQuery, Font Awesome 5) |
 | 차트 · 표 | Chart.js, DataTables (SB Admin 2 내장) |
-| 빌드 | Gradle |
+| 빌드 | Gradle (`bootJar`로 실행 가능한 jar 생성) |
+| 시간대 | 서버 시간대와 상관없이 항상 한국 시간(Asia/Seoul) 기준 |
 
 ## 실행 방법
 
 ### 1. 준비물
-- JDK 21 (Gradle 툴체인이 21로 빌드하므로 없으면 설치 필요)
-- Docker (PostgreSQL 실행용)
+- JDK 21 (Gradle 툴체인이 21로 빌드하므로 없으면 설치 필요). 만들어진 jar를 **실행**만 한다면 Java 17 이상이면 됩니다.
+- Docker (로컬 PostgreSQL 실행용. 배포 DB(Neon)를 쓰면 필요 없음)
 
 ### 2. DB 실행 (Docker)
 `.env.example`을 복사해 `.env`를 만들고 값을 채웁니다. (`.env`는 git에 올라가지 않습니다.)
@@ -87,14 +88,45 @@ docker exec midterm-db psql -U postgres -c "CREATE DATABASE midterm_test"
 테스트도 `.env`의 `DB_USERNAME`, `DB_PASSWORD`를 사용하며, 테스트가 끝나면 테이블은 자동으로 삭제됩니다.
 테스트에서는 강사 초기 계정을 자동 생성하지 않습니다.
 
+> [!WARNING]
+> 테스트는 시작할 때 테이블을 지우고 다시 만듭니다. `.env`가 **배포 DB(Neon)**를 가리키는 상태로 테스트를 돌리면 안 됩니다.
+> 로컬 DB로 돌릴 때는 `.env`를 고치지 말고, 실행하는 창에서만 환경변수로 덮어쓰세요. (환경변수가 `.env`보다 우선합니다)
+> ```powershell
+> $env:TEST_DB_URL="jdbc:postgresql://localhost:5432/midterm_test"; $env:DB_USERNAME="postgres"; $env:DB_PASSWORD="로컬비밀번호"; .\gradlew.bat test --tests "*ObjectionControllerTest"
+> ```
+
+### 6. jar로 배포 · 실행
+
+```bash
+./gradlew clean bootJar
+java -jar build/libs/vibe-midterm-0.0.1-SNAPSHOT.jar
+```
+
+jar에는 `.env`가 들어 있지 않으므로, 서버에는 아래 값을 **환경변수나 실행 폴더의 `.env`**로 전달해야 합니다. 없으면 DB 주소가 기본값(localhost)이 되어 앱이 시작하지 못합니다.
+
+| 항목 | 예시 · 설명 |
+|------|-------------|
+| `DB_URL` | `jdbc:postgresql://<호스트>/<DB이름>?sslmode=require` (Neon은 SSL 필수) |
+| `DB_USERNAME` · `DB_PASSWORD` | DB 계정 |
+| `INSTRUCTOR_EMAIL` · `INSTRUCTOR_PASSWORD` | 강사 초기 계정 (비밀번호를 비우면 계정이 만들어지지 않음) |
+| `SERVER_PORT` | 서버가 요구하는 포트 (기본 8080) |
+| `REMEMBER_ME_KEY` | (선택) 로그인 상태 유지 쿠키 서명 키. 지정하면 서버를 다시 시작해도 유지됨 |
+| `UPLOAD_DIR` | (선택) 첨부파일 저장 폴더. 기본은 실행 위치의 `uploads/` |
+
+- 서버의 시간대가 UTC여도 앱은 한국 시간(Asia/Seoul)으로 동작합니다. (제출 기간 판정과 저장 시각)
+- 첨부파일은 DB가 아니라 서버의 `uploads/` 폴더에 저장됩니다.
+
 ## 프로젝트 구조
 
 ```
 src/main/java/kr/ac/ync/midterm/
 ├─ MidtermApplication.java
 ├─ global/                           # 공통
-│  ├─ config/SecurityConfig.java     # 폼 로그인, 접근 규칙, BCrypt
-│  └─ exception/                     # CustomException, ForbiddenException, GlobalExceptionHandler
+│  ├─ config/                        # SecurityConfig(폼 로그인 · 로그인 상태 유지 · 접근 규칙 · BCrypt), ClockConfig(한국 시간)
+│  ├─ exception/                     # CustomException, ForbiddenException, GlobalExceptionHandler
+│  ├─ security/                      # CustomUserDetails, CustomUserDetailsService
+│  ├─ storage/                       # FileStorage (UUID 저장, 확장자 · 크기 검사, 커밋 뒤 삭제)
+│  └─ csv/                           # CsvBuilder (UTF-8 BOM, 수식 주입 방지)
 ├─ user/                             # 기능별 패키지 (아래 하위 패키지 구성은 모두 동일)
 │  ├─ controller/  AuthController (/login, /signup)
 │  ├─ domain/      User, Role
@@ -104,7 +136,9 @@ src/main/java/kr/ac/ync/midterm/
 │  └─ service/     UserService, UserServiceImpl
 ├─ course/         강좌 개설 · 수강 등록 · 수강생 목록 (Course, Enrollment)
 ├─ assignment/     과제 등록 · 수정 · 삭제, 첨부파일, 내 과제 (Assignment, AssignmentStatus)
-├─ submission/     제출 · 재제출, 제출 파일, 제출 현황, 채점, 내 제출 (Submission, SubmissionStatus)
+├─ submission/     제출 · 재제출, 제출 파일, 제출 현황, 채점, 내 제출, 이의 신청 · 알림 (Submission, SubmissionStatus)
+├─ attachment/     여러 파일 첨부 (Attachment, 다운로드 · 개별 삭제)
+├─ export/         표 내보내기 CSV (수강생 · 제출 현황 · 통계)
 ├─ stats/          강사 통계 대시보드 (/instructor/stats)
 ├─ dashboard/      역할별 대시보드 집계 (학생 S5, 강사)
 └─ home/controller/HomeController.java  # 대시보드 (/)
@@ -118,7 +152,7 @@ src/main/resources/
 ├─ static/                           # SB Admin 2 (css, js, vendor, img)
 └─ templates/
    ├─ layout/layout.html             # 공통 레이아웃
-   ├─ fragments/                     # sidebar(역할별), topbar, footer
+   ├─ fragments/                     # sidebar(역할별), topbar(강사 이의 신청 알림), footer, datatables
    ├─ auth/                          # login, signup
    ├─ error/                         # 403, 404, 공통 오류
    └─ home.html
@@ -250,5 +284,9 @@ assignment 1:N submission, users(학생) 1:N submission.
 ## 알려진 한계 · 남은 과제
 
 - 제출 파일과 과제 첨부파일은 확장자만 검사합니다. 다운로드는 항상 내려받기로만 응답합니다.
+- 같은 제출을 두 사람이 동시에 채점하면 마지막 저장이 적용됩니다. (낙관적 락은 적용하지 않음)
+- 이의 신청 알림은 화면을 열거나 새로고침할 때 갱신됩니다. 실시간 푸시는 아닙니다.
+- 서버가 파일 삭제 직전에 종료되면 이전 첨부 파일이 서버에 남을 수 있습니다. (DB와 파일의 불일치는 커밋 뒤 삭제 · 롤백 시 정리로 줄였지만 종료 시점은 막지 못함)
+- 테스트는 `.env`의 DB 계정을 그대로 쓰므로, 배포 DB로 바꾼 `.env`에서는 위 환경변수 덮어쓰기가 필요합니다.
 - 다른 강사의 강좌에 접근하는 403(B5)은 강사 계정이 하나뿐인 환경에서는 테스트로 확인했습니다. 자세한 대체 방법은 [시연 문서](docs/demo.md)에 있습니다.
 - 선택 기능과 PR의 개선점은 [아이디어 · 추가 예정](docs/ideas.md)에 정리되어 있습니다.
